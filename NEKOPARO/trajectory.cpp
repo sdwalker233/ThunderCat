@@ -18,6 +18,7 @@ Trajectory::Trajectory()
 	dot[4] = IMG_Load("resources/pic/dot_purple.png");
 	dot[5] = IMG_Load("resources/pic/dot_green.png");
 	dot[6] = IMG_Load("resources/pic/dot_yellow.png");
+	du = new EffectSound("resources/music/du.wav");
 }
 
 void Trajectory::clear()
@@ -76,11 +77,11 @@ int Trajectory::recognize()
 	double laverang, raverang, sumang;
 	sumang = 0;
 	for(lpos=11; lpos <= 30; lpos++){
-		sumang += atan2(postions[5].y-postions[lpos].y, postions[5].x-postions[lpos].x);
+		sumang += atan2(1.0*postions[5].y-postions[lpos].y, 1.0*postions[5].x-postions[lpos].x);
 	}
 	laverang = sumang/20;
 	for(; lpos < postions.size(); lpos++){
-		double tmpang = atan2(postions[5].y-postions[lpos].y, postions[5].x-postions[lpos].x);
+		double tmpang = atan2(1.0*postions[5].y-postions[lpos].y, 1.0*postions[5].x-postions[lpos].x);
 		if(fabs(tmpang-laverang)>0.25) break;
 		sumang += tmpang;
 		laverang = sumang/(lpos-10);
@@ -89,11 +90,11 @@ int Trajectory::recognize()
 	sumang = 0;
 	int lastpos = (int)postions.size()-1;
 	for(rpos = lastpos-11; rpos >= lastpos-30; rpos--){
-		sumang += atan2(postions[lastpos-5].y-postions[rpos].y, postions[lastpos-5].x-postions[rpos].x);
+		sumang += atan2(1.0*postions[lastpos-5].y-postions[rpos].y, 1.0*postions[lastpos-5].x-postions[rpos].x);
 	}
 	raverang = sumang/20;
 	for(; rpos >= 0; rpos--){
-		double tmpang = atan2(postions[lastpos-5].y-postions[rpos].y, postions[lastpos-5].x-postions[rpos].x);
+		double tmpang = atan2(1.0*postions[lastpos-5].y-postions[rpos].y, 1.0*postions[lastpos-5].x-postions[rpos].x);
 		if(fabs(tmpang-raverang)>0.25) break;
 		sumang += tmpang;
 		raverang = sumang/(lastpos-rpos-10);
@@ -144,5 +145,5 @@ void Trajectory::show()
 	}
 	finishSurface();
 	
-	du.play();
+	du->play();
 }

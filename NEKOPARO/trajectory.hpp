@@ -18,7 +18,7 @@ private:
 	SDL_Surface *dot[7];
 	vector<SDL_Point> postions;
 	int shape;
-	EffectSound du = EffectSound("resources/music/du.wav");
+	EffectSound *du;
 public:
 	Trajectory();
 	void addPostion(SDL_Point point);
