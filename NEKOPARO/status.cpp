@@ -75,7 +75,10 @@ int Score::getScore()
 
 void Score::show()
 {
-	string text = to_string(score);
+	stringstream stream;
+	string text;
+	stream << score;
+	stream >> text;
 	while(text.length() < 8) text.insert(0, "0");
 	//cout<<text<<endl;
 	SDL_Surface *_sur = TTF_RenderText_Blended(font, text.c_str(), BLACK);

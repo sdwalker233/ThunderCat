@@ -46,8 +46,8 @@ void Game::run()
 	show();
 	
 	int f = 0;
-	const Uint32 FPS=1000/30;//30为限制的帧速
-	Uint32 _FPS_Timer;
+	const Uint32 FPS=1000/30;//30 is fps
+	Uint32 _FPS_Timer = 0;
 	bool quit = false;
 	bool mouse = false;
 	SDL_Point pos;

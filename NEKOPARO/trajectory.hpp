@@ -16,7 +16,7 @@
 class Trajectory: public Component {
 private:
 	SDL_Surface *dot[7];
-	vector<SDL_Point> postions;
+	vector<SDL_Point> positions;
 	int shape;
 	EffectSound *du;
 public:

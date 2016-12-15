@@ -16,7 +16,7 @@ void SDLQuit()
 	SDL_Quit();
 }
 
-int main(int argc, const char * argv[])
+int main(int argc, char * argv[])
 {
 	try {
 		SDLInit();

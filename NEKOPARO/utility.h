@@ -22,6 +22,7 @@
 #include <SDL_mixer.h>
 #endif
 #include <iostream>
+#include <sstream>
 #include <cmath>
 #include <string>
 #include <vector>
