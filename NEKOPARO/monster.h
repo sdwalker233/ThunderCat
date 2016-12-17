@@ -1,6 +1,12 @@
 #include "utility.h"
+#include "component.hpp"
 
-class Monster{
+const int MonsterWidth=352;
+const int MonsterHeight=267;
+const int ShapeWidth=20;
+const int ShapeHeight=20;
+
+class Monster:public Component{
 private:
 	string label;
 	int type;
@@ -11,10 +17,11 @@ private:
 	double currentX;
 	double currentY;
 	double speed;
-
+	SDL_Surface *monstersurface;
+	SDL_Surface *shapesurface[6];
 public:
 	Monster();
-	void Initial(SDL_Renderer *&render,SDL_Texture *&texture,string filename);
+	void show();
 	void setType(int t);
 	void setStart(double x,double y);
 	void setEnding(double x,double y);
@@ -29,5 +36,8 @@ public:
 	double getSpeed();
 	void move();
 	bool isReachEnding();
+	void deleteLabel(int ch);
+	bool isDead();
+	void retreat();
 };
 

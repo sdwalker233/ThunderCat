@@ -31,7 +31,7 @@ void Trajectory::addPostion(SDL_Point point)
 {
 	SDL_Point start = point, tmp;
 	if(!positions.empty()) start = positions.back();
-	int num = max(abs(start.x-point.x), abs(start.y-point.y));
+	int num = fmax(abs(start.x-point.x), abs(start.y-point.y));
 	float interx = (point.x-start.x)/(float)num;
 	float intery = (point.y-start.y)/(float)num;
 	for(int i = 1; i < num; i++){
@@ -67,10 +67,12 @@ int Trajectory::recognize()
 	}
 	if(max_x-min_x>4*(max_y-min_y)){
 		shape = 2;
+		du->play();
 		return shape;
 	}
 	if(max_y-min_y>4*(max_x-min_x)){
 		shape = 3;
+		du->play();
 		return shape;
 	}
 	
@@ -104,16 +106,19 @@ int Trajectory::recognize()
 	//printf(" %d %d %d\n",lpos,rpos,positions.size());
 	//printf("  %f %f\n", laverang, raverang);
 	if(laverang>-M_PI/2 && laverang<0 &&raverang>M_PI/2 && raverang<M_PI && lpos<rpos){
+		du->play();
 		shape = 6;
 		return shape;
 	}
 	
 	if(laverang>-M_PI && laverang<-M_PI/2 && raverang>-M_PI/2 && raverang<0){
 		shape = 4;
+		du->play();
 		return shape;
 	}
 	if(laverang>M_PI/2 && laverang<M_PI && raverang>0 && raverang<M_PI/2){
 		shape = 5;
+		du->play();
 		return shape;
 	}
 	/*if(fabs(max_y_pos-(int)positions.size()/2)<fabs(min_y_pos-(int)positions.size()/2.0)){
@@ -146,6 +151,4 @@ void Trajectory::show()
 		addSurface(dot[shape], &rect);
 	}
 	finishSurface();
-	
-	du->play();
 }

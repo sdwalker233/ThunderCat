@@ -12,6 +12,7 @@
 #include "utility.h"
 #include "trajectory.hpp"
 #include "status.hpp"
+#include "monster.h"
 
 class Game{
 private:
@@ -21,6 +22,8 @@ private:
 	Trajectory tra;
 	Life life;
 	Score score;
+	int monster_number;
+	vector<Monster> monsters;
 	SDL_Texture *tex_background;
 public:
 	Game();

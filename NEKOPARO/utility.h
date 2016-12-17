@@ -49,3 +49,4 @@ const SDL_Color BLACK = {0, 0, 0, 80};
 
 */
 #endif /* utility_h */
+

@@ -1,25 +1,59 @@
 #include"monster.h"
 
+
+string generateLabel()
+{
+	int MAXTIME=4,count,n;
+	string res="";
+	count=1+rand()%MAXTIME;		//最多产生5个符号
+	for(int i=0;i<count;i++)
+	{
+		n=rand()%MAXTIME + 2;
+		res += n+'0';
+	}
+	return res;
+}
+
+
 Monster::Monster()
 {
-	label="";
+	label=generateLabel();
 	type=0;
 	startpointX=0.0;
 	startpointY=0.0;
-	endingpointX=0.0;
-	endingpointY=0.0;
-	currentX=0.0;
-	currentY=0.0;
-	speed=0.0;
+	endingpointX=500.0;
+	endingpointY=500.0;
+	currentX=200.0;
+	currentY=200.0;
+	speed=1.0;
+	monstersurface=IMG_Load("resources/pic/Aang.png");
+	for(int i=2;i<6;i++)
+	{
+		char filename[30];
+		sprintf(filename, "resources/pic/shape%d.png", i);
+		shapesurface[i] = IMG_Load(filename);
+	}
+	cout<<label<<endl;
 }
 
-void Monster::Initial(SDL_Renderer *&render,SDL_Texture *&texture,string filename)
+void Monster::show()
 {
-	texture = IMG_LoadTexture(render,filename.c_str());
-	if(texture==nullptr)
+	SDL_Rect rect;
+	SDL_Rect rect_monster={(int)currentX,(int)currentY,(int)MonsterWidth,(int)MonsterHeight};
+	clearSurface();
+	addSurface(monstersurface,&rect_monster);
+
+	double firstx=MonsterWidth/2-label.length()*1.0*(ShapeWidth)/2+currentX;
+	for(int i=0;i<label.length();i++)
 	{
-		cout<<"SDL_CeeateTexture Error:"<<SDL_GetError()<<endl;
+		rect.x=firstx+i*ShapeWidth;
+		rect.y=currentY-ShapeHeight;
+		rect.h=ShapeHeight;
+		rect.w=ShapeWidth;
+		addSurface(shapesurface[label[i]-'0'],&rect);
 	}
+	finishSurface();
+
 }
 
 void Monster::setType(int t)
@@ -98,4 +132,21 @@ bool Monster::isReachEnding()
 		return false;
 }
 
+void Monster::deleteLabel(int t)
+{
+	if(t == 6) label = "";
+	if(label.length() && label[0] == '0'+t) label = label.substr(1, label.length());
+}
 
+bool Monster::isDead()
+{
+	if (label == "")
+		return true;
+	else
+		return false;
+}
+
+void Monster::retreat()
+{
+	speed = -8.0;
+}
