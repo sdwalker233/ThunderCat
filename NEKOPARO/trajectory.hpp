@@ -19,8 +19,10 @@ private:
 	vector<SDL_Point> positions;
 	int shape;
 	EffectSound *du;
+	clock_t start_time;
 public:
 	Trajectory();
+	//Trajectory(const Trajectory& tra);
 	void addPostion(SDL_Point point);
 	int recognize();
 	void show();

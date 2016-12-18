@@ -22,14 +22,17 @@ private:
 	Trajectory tra;
 	Life life;
 	Score score;
-	int monster_number;
 	vector<Monster> monsters;
+	int monster_number;
 	SDL_Texture *tex_background;
 public:
 	Game();
 	~Game();
 	void run();
+	void stage();
 	void show();
+	void welcome();
+	void createMonster(int m_number);
 };
 
 #endif /* game_hpp */

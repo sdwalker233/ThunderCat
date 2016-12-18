@@ -21,8 +21,8 @@ Monster::Monster()
 	type=0;
 	startpointX=0.0;
 	startpointY=0.0;
-	endingpointX=500.0;
-	endingpointY=500.0;
+	endingpointX=300.0;
+	endingpointY=300.0;
 	currentX=200.0;
 	currentY=200.0;
 	speed=1.0;
@@ -33,7 +33,8 @@ Monster::Monster()
 		sprintf(filename, "resources/pic/shape%d.png", i);
 		shapesurface[i] = IMG_Load(filename);
 	}
-	cout<<label<<endl;
+	isout = false;
+	//cout<<label<<endl;
 }
 
 void Monster::show()
@@ -65,9 +66,11 @@ void Monster::setStart(double x,double y)
 {
 	this->startpointX=x;
 	this->startpointY=y;
+	this->currentX=x;
+	this->currentY=y;
 }
 
-void Monster::setEnding(double x,double y)
+void Monster::setEnd(double x,double y)
 {
 	this->endingpointX=x;
 	this->endingpointY=y;
@@ -93,12 +96,12 @@ double Monster::getStartY()
 	return startpointY;
 }
 
-double Monster::getEndingX()
+double Monster::getEndX()
 {
 	return endingpointX;
 }
 
-double Monster::getEndingY()
+double Monster::getEndY()
 {
 	return endingpointY;
 }
@@ -121,15 +124,27 @@ double Monster::getCurrentY()
 
 void Monster::move()
 {
-	currentX+=speed*cos(atan2(endingpointY-startpointY,endingpointX-startpointX));
-	currentY+=speed*sin(atan2(endingpointY-startpointY,endingpointX-startpointX));
+	if(speed > 0){
+		double dis = hypot(endingpointY - currentY, endingpointX - currentX);
+		double delta = 5 * sin(0.08*dis);
+		currentX+=speed*cos(atan2(endingpointY-currentY,endingpointX-currentX)) + delta*sin(atan2(endingpointY - currentY, endingpointX - currentX));
+		currentY+=speed*sin(atan2(endingpointY-currentY,endingpointX-currentX)) - delta*cos(atan2(endingpointY - currentY, endingpointX - currentX));
+	}
+	else{//retreat
+		currentX-=speed*cos(atan2(startpointY-currentY,startpointX-currentX));
+		currentY-=speed*sin(atan2(startpointY-currentY,startpointX-currentX));
+	}
+	
 }
-bool Monster::isReachEnding()
+
+bool Monster::isReachEnd()
 {
-	if(currentX>endingpointX||currentY>endingpointY)
+	if(hypot(currentX-endingpointX, currentY-endingpointY) < 10){
+		isout = true;
+		setVisible(false);
 		return true;
-	else 
-		return false;
+	}
+	else return false;
 }
 
 void Monster::deleteLabel(int t)
@@ -146,7 +161,23 @@ bool Monster::isDead()
 		return false;
 }
 
+bool Monster::isOut()
+{
+	return isout;
+}
+
 void Monster::retreat()
 {
 	speed = -8.0;
+}
+
+bool Monster::isReachStart()
+{
+	if(isDead() && hypot(currentX-startpointX, currentY-startpointY) < 10){
+		//cout<<"***"<<endl;
+		isout = true;
+		setVisible(false);
+		return true;
+	}
+	return false;
 }

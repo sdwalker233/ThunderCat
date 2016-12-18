@@ -12,6 +12,7 @@ Component::Component()
 {
 	tex = nullptr;
 	sur = nullptr;
+	visible = true;
 }
 
 void Component::setRender(SDL_Renderer *_ren)
@@ -21,7 +22,8 @@ void Component::setRender(SDL_Renderer *_ren)
 
 SDL_Texture* Component::getTexture()
 {
-	return tex;
+	if(visible)	return tex;
+	else return nullptr;
 }
 
 void Component::clearSurface()
@@ -39,4 +41,9 @@ void Component::finishSurface()
 {
 	if(tex != nullptr) SDL_DestroyTexture(tex);
 	tex = SDL_CreateTextureFromSurface(ren, sur);
+}
+
+void Component::setVisible(bool _visible)
+{
+	visible = _visible;
 }

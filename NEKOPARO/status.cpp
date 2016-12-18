@@ -86,6 +86,7 @@ void Score::show()
 	clearSurface();
 	addSurface(_sur, &rect);
 	finishSurface();
+	SDL_FreeSurface(_sur);
 }
 
 /*Score::~Score()
