@@ -9,7 +9,7 @@
 #ifndef utility_h
 #define utility_h
 
-#ifndef WINDOWS
+#ifdef __APPLE__
 #include <SDL2/SDL.h>
 #include <SDL2_image/SDL_image.h>
 #include <SDL2_ttf/SDL_ttf.h>
@@ -26,6 +26,7 @@
 #include <cmath>
 #include <string>
 #include <vector>
+#include <ctime>
 using namespace std;
 
 const int windowWidth = 800;
