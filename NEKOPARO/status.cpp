@@ -94,3 +94,48 @@ void Score::show()
 	TTF_CloseFont(font);
 }*/
 //*******************************
+
+
+//*******************************
+//class Score
+
+Lightning::Lightning()
+{
+	num = 0;
+	lightningSurface1 = IMG_Load("resources/pic/lightning1.png");
+	//lightningSurface2 = IMG_Load("resources/pic/lightning2.png");
+}
+
+int Lightning::getNum()
+{
+	return num;
+}
+
+void Lightning::increase()
+{
+	num++;
+	if(num>MAX_LIGHTNING) num = MAX_LIGHTNING;
+}
+
+void Lightning::decrease()
+{
+	num--;
+	if(num<0) num = 0;
+}
+
+void Lightning::show()
+{
+	clearSurface();
+	SDL_Rect rect = {270, 0, 50, 50};
+	for(int i = 0; i < num; i++){
+		rect.x += 50;
+		addSurface(lightningSurface1, &rect);
+	}
+	/*for(int i = num; i < MAX_LIGHTNING; i++){
+		rect.x += 50;
+		addSurface(lightningSurface2, &rect);
+	}*/
+	finishSurface();
+}
+
+//*******************************

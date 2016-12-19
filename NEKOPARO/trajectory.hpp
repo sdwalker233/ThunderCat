@@ -20,6 +20,7 @@ private:
 	int shape;
 	EffectSound *du;
 	clock_t start_time;
+	int lasti, lastshape;
 public:
 	Trajectory();
 	//Trajectory(const Trajectory& tra);

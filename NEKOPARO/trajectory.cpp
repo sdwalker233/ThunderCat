@@ -27,6 +27,8 @@ void Trajectory::clear()
 	shape = 0;
 	setVisible(true);
 	start_time = 0;
+	lasti = 0;
+	lastshape = -1;
 }
 
 void Trajectory::addPostion(SDL_Point point)
@@ -149,15 +151,21 @@ void Trajectory::clearSurface()
 
 void Trajectory::show()
 {
-	if(start_time > 0 && clock() - start_time>1000000)
+	if(start_time > 0 && clock() - start_time>ONE_SECOND)
 		setVisible(false);
 	SDL_Rect rect = {0, 0, dotsize, dotsize};
-	clearSurface();
 	
-	for (int i = 0; i < positions.size(); i++) {
+	//if(lasti == 0) clearSurface();
+	if(lastshape != shape){
+		clearSurface();
+		lastshape = shape;
+		lasti = 0;
+	}
+	for (int i = lasti; i < positions.size(); i++) {
 		rect.x = positions[i].x - dotsize/2;
 		rect.y = positions[i].y - dotsize/2;
 		addSurface(dot[shape], &rect);
 	}
 	finishSurface();
+	lasti = (int)positions.size();
 }

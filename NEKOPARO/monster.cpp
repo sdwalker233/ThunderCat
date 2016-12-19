@@ -168,7 +168,7 @@ bool Monster::isOut()
 
 void Monster::retreat()
 {
-	speed = -8.0;
+	speed = -15.0;
 }
 
 bool Monster::isReachStart()

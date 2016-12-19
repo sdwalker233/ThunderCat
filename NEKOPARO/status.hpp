@@ -34,4 +34,16 @@ public:
 	void show();
 	//~Score();
 };
+
+class Lightning: public Component{
+private:
+	int num;
+	SDL_Surface *lightningSurface1, *lightningSurface2;
+public:
+	Lightning();
+	int getNum();
+	void increase();
+	void decrease();
+	void show();
+};
 #endif /* status_hpp */

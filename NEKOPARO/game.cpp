@@ -14,10 +14,13 @@ Game::Game()
 	srand( (unsigned)time( NULL ) );
 	win = SDL_CreateWindow("A Simple Game", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, windowWidth, windowHeight, SDL_WINDOW_SHOWN);
 	ren = SDL_CreateRenderer(win, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+	if(ren == nullptr) ren = SDL_CreateRenderer(win, -1, SDL_RENDERER_SOFTWARE);
 	tra.setRender(ren);
 	life.setRender(ren);
 	score.setRender(ren);
+	lightning.setRender(ren);
 	
+	quit = false;
 	EffectSound miao = EffectSound("resources/music/miao.wav");
 	miao.play();
 	SDL_Surface *sur_background = IMG_Load("resources/pic/background2.jpg");
@@ -43,6 +46,8 @@ void Game::show()
 	
 	tra.show();
 	SDL_RenderCopy(ren, tra.getTexture(), NULL, &FULL_RECT);
+	lightning.show();
+	SDL_RenderCopy(ren, lightning.getTexture(), NULL, &FULL_RECT);
 	score.show();
 	SDL_RenderCopy(ren, score.getTexture(), NULL, &FULL_RECT);
 	SDL_RenderPresent(ren);
@@ -56,17 +61,18 @@ void Game::welcome()
 	SDL_Rect rect_startbutton = { 390,290,147,168 };
 	SDL_RenderCopy(ren, startbutton, NULL, &rect_startbutton);
 	SDL_RenderPresent(ren);
-	bool quit = false;
-	while (!quit) {
+	bool q = false;
+	while (!q) {
 		while (SDL_PollEvent(&event)) {
 			
 			switch (event.type) {
 				case SDL_QUIT:
 					quit = true;
+					q = true;
 					break;
 				case SDL_MOUSEBUTTONDOWN:
 					if(event.button.x>=390&& event.button.x<=537&& event.button.y>=290&& event.button.y<=458)
-						quit = true;
+						q = true;
 					break;
 			}
 		}
@@ -87,6 +93,7 @@ void Game::createMonster(int m_number)
 void Game::run()
 {
 	welcome();
+	lightning.increase();
 	show();
 //chapter 1
 //level 1
@@ -116,6 +123,7 @@ void Game::run()
 	monsters[2].setEnd(20, 400);
 	monsters[2].setSpeed(6.0);
 	stage();
+	lightning.increase();
 	
 //chapter 2
 //level 1
@@ -148,13 +156,13 @@ void Game::run()
 	monsters[3].setEnd(350, 420);
 	monsters[3].setSpeed(4.0);
 	stage();
+	lightning.increase();
 }
 
 void Game::stage()
 {
 	const Uint32 FPS=1000/30;//30 is fps
 	Uint32 _FPS_Timer = 0;
-	bool quit = false;
 	bool mouse = false;
 	SDL_Point pos;
 	int x, y;
@@ -195,6 +203,10 @@ void Game::stage()
 						//printf("up: %d, %d\n", x, y);
 						
 						int t = tra.recognize();
+						if(t == 6){
+							if(lightning.getNum() == 0) break;
+							lightning.decrease();
+						}
 						//cout<<t<<endl;
 						for(int i = 0; i < monster_number; i++)
 							if(monsters[i].isDead() == false){
@@ -217,7 +229,7 @@ void Game::stage()
 				if(monsters[i].isReachStart()){}
 			}
 		}
-		if(outnum == monster_number) quit = true;
+		if(outnum == monster_number) break;
 		
 		show();
 		if(SDL_GetTicks()-_FPS_Timer<FPS){

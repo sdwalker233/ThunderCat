@@ -22,9 +22,11 @@ private:
 	Trajectory tra;
 	Life life;
 	Score score;
+	Lightning lightning;
 	vector<Monster> monsters;
 	int monster_number;
 	SDL_Texture *tex_background;
+	bool quit;
 public:
 	Game();
 	~Game();
