@@ -1,6 +1,6 @@
 //
 //  game.hpp
-//  SDL_game
+//  NEKOPARO
 //
 //  Created by shad0w_walker on 2016/12/14.
 //  Copyright © 2016年 GKP. All rights reserved.
@@ -13,6 +13,7 @@
 #include "trajectory.hpp"
 #include "status.hpp"
 #include "monster.h"
+#include "hero.hpp"
 
 class Game{
 private:
@@ -24,8 +25,9 @@ private:
 	Score score;
 	Lightning lightning;
 	vector<Monster> monsters;
+	Hero hero;
 	int monster_number;
-	SDL_Texture *tex_background;
+	SDL_Texture *bgTexture;
 	bool quit;
 public:
 	Game();
@@ -33,8 +35,9 @@ public:
 	void run();
 	void stage();
 	void show();
-	void welcome();
+	int welcome();
 	void createMonster(int m_number);
+	void scoll(const string& bgName);
 };
 
 #endif /* game_hpp */

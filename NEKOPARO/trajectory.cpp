@@ -15,9 +15,9 @@ Trajectory::Trajectory()
 	dot[1] = IMG_Load("resources/pic/dot_black.png");
 	dot[2] = IMG_Load("resources/pic/dot_red.png");
 	dot[3] = IMG_Load("resources/pic/dot_blue.png");
-	dot[4] = IMG_Load("resources/pic/dot_purple.png");
+	dot[4] = IMG_Load("resources/pic/dot_yellow.png");
 	dot[5] = IMG_Load("resources/pic/dot_green.png");
-	dot[6] = IMG_Load("resources/pic/dot_yellow.png");
+	dot[6] = IMG_Load("resources/pic/dot_gold.png");
 	du = new EffectSound("resources/music/du.wav");
 }
 

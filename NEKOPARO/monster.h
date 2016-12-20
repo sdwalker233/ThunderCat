@@ -1,8 +1,8 @@
 #include "utility.h"
 #include "component.hpp"
 
-const int MonsterWidth=132;
-const int MonsterHeight=100;
+const int MonsterWidth=100;
+const int MonsterHeight=76;
 const int ShapeWidth=20;
 const int ShapeHeight=20;
 

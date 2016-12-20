@@ -19,12 +19,12 @@ Game::Game()
 	life.setRender(ren);
 	score.setRender(ren);
 	lightning.setRender(ren);
+	hero.setRender(ren);
+	bgTexture = nullptr;
 	
 	quit = false;
 	EffectSound miao = EffectSound("resources/music/miao.wav");
 	miao.play();
-	SDL_Surface *sur_background = IMG_Load("resources/pic/background2.jpg");
-	tex_background = SDL_CreateTextureFromSurface(ren, sur_background);
 }
 
 Game::~Game()
@@ -35,7 +35,8 @@ Game::~Game()
 
 void Game::show()
 {
-	SDL_RenderCopy(ren, tex_background, NULL, &FULL_RECT);
+	SDL_RenderClear(ren);
+	SDL_RenderCopy(ren, bgTexture, NULL, &FULL_RECT);
 	life.show();
 	SDL_RenderCopy(ren, life.getTexture(), NULL, &FULL_RECT);
 	for(int i = 0; i < monster_number; i++){
@@ -43,7 +44,8 @@ void Game::show()
 		monsters[i].show();
 		SDL_RenderCopy(ren, monsters[i].getTexture(), NULL, &FULL_RECT);
 	}
-	
+	hero.show();
+	SDL_RenderCopy(ren, hero.getTexture(), NULL, &FULL_RECT);
 	tra.show();
 	SDL_RenderCopy(ren, tra.getTexture(), NULL, &FULL_RECT);
 	lightning.show();
@@ -53,30 +55,65 @@ void Game::show()
 	SDL_RenderPresent(ren);
 }
 
-void Game::welcome()
+void Game::scoll(const string &bgName)
 {
-	SDL_Texture *startbutton;
-	SDL_Surface *sur_startbutton = IMG_Load("resources/pic/startbutton.jpg");
-	startbutton = SDL_CreateTextureFromSurface(ren, sur_startbutton);
-	SDL_Rect rect_startbutton = { 390,290,147,168 };
-	SDL_RenderCopy(ren, startbutton, NULL, &rect_startbutton);
+	SDL_Texture *last_bg = bgTexture;
+	SDL_Surface *bgSurface = IMG_Load(bgName.c_str());
+	bgTexture = SDL_CreateTextureFromSurface(ren, bgSurface);
+	SDL_Rect rect = {0, 0, windowWidth, windowHeight};
+	for(int i = windowWidth; i >= 0; i -= 7){
+		//SDL_RenderClear(ren);
+		SDL_RenderCopy(ren, last_bg, NULL, &FULL_RECT);
+		rect.x = i;
+		SDL_RenderCopy(ren, bgTexture, NULL, &rect);
+		SDL_RenderPresent(ren);
+		SDL_Delay(5);
+	}
+	SDL_DestroyTexture(last_bg);
+}
+
+/*返回1：关卡模式
+ 返回2：无尽模式
+ 返回3：退出*/
+int Game::welcome()
+{
+	SDL_Texture *roundmode,*endlessmode,*exit;
+	SDL_Surface *sur_roundmode = IMG_Load("resources/pic/roundmode.png"),
+	*sur_endlessmode = IMG_Load("resources/pic/endlessmode.png"),
+	*sur_exit = IMG_Load("resources/pic/exit.png");
+	roundmode = SDL_CreateTextureFromSurface(ren, sur_roundmode);
+	endlessmode = SDL_CreateTextureFromSurface(ren, sur_endlessmode);
+	exit = SDL_CreateTextureFromSurface(ren, sur_exit);
+	
+	SDL_Rect rect_roundmode = { 307,150,187,85 };
+	SDL_Rect rect_endlessmode = { 307,250,187,85 };
+	SDL_Rect rect_exit= { 307,350,187,85 };
+	SDL_RenderCopy(ren, bgTexture, NULL, &FULL_RECT);
+	SDL_RenderCopy(ren, roundmode, NULL, &rect_roundmode);
+	SDL_RenderCopy(ren, endlessmode, NULL, &rect_endlessmode);
+	SDL_RenderCopy(ren, exit, NULL, &rect_exit);
 	SDL_RenderPresent(ren);
 	bool q = false;
 	while (!q) {
 		while (SDL_PollEvent(&event)) {
-			
 			switch (event.type) {
 				case SDL_QUIT:
 					quit = true;
 					q = true;
 					break;
 				case SDL_MOUSEBUTTONDOWN:
-					if(event.button.x>=390&& event.button.x<=537&& event.button.y>=290&& event.button.y<=458)
-						q = true;
+					if (event.button.x >= 307 && event.button.x <= 494 && event.button.y >= 150 && event.button.y <= 235)
+						return 1;
+					if (event.button.x >= 307 && event.button.x <= 494 && event.button.y >= 250 && event.button.y <= 335)
+						return 2;
+					if (event.button.x >= 307 && event.button.x <= 494 && event.button.y >= 350 && event.button.y <= 435)
+						return 3;
+					
 					break;
 			}
 		}
 	}
+	return 3;
 }
 
 void Game::createMonster(int m_number)
@@ -92,10 +129,15 @@ void Game::createMonster(int m_number)
 
 void Game::run()
 {
+	scoll("resources/pic/background1.jpg");
 	welcome();
+	
 	lightning.increase();
-	show();
+
 //chapter 1
+	scoll("resources/pic/background2.jpg");
+	hero.setPosition(0, 240);
+	hero.setStatus(7);
 //level 1
 	createMonster(1);
 	monsters[0].setStart(800, 100);
@@ -126,6 +168,9 @@ void Game::run()
 	lightning.increase();
 	
 //chapter 2
+	scoll("resources/pic/background3.jpg");
+	hero.setPosition(350, 240);
+	hero.setStatus(7);
 //level 1
 	createMonster(1);
 	monsters[0].setStart(800, 0);
@@ -203,6 +248,7 @@ void Game::stage()
 						//printf("up: %d, %d\n", x, y);
 						
 						int t = tra.recognize();
+						hero.setStatus(t);
 						if(t == 6){
 							if(lightning.getNum() == 0) break;
 							lightning.decrease();

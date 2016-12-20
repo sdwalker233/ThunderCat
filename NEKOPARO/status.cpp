@@ -59,7 +59,7 @@ void Life::show()
 Score::Score()
 {
 	score = 0;
-	font = TTF_OpenFont("resources/font/monaco.ttf", 44);
+	font = TTF_OpenFont("resources/font/nekoparo.ttf", 50);
 	if(font == nullptr) cout<<"font not found"<<endl;
 }
 
@@ -82,7 +82,7 @@ void Score::show()
 	while(text.length() < 8) text.insert(0, "0");
 	//cout<<text<<endl;
 	SDL_Surface *_sur = TTF_RenderText_Blended(font, text.c_str(), BLACK);
-	SDL_Rect rect = {570, 0, 100, 20};
+	SDL_Rect rect = {550, -7, 100, 20};
 	clearSurface();
 	addSurface(_sur, &rect);
 	finishSurface();

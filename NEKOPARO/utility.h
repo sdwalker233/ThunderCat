@@ -1,6 +1,6 @@
 //
 //  utility.h
-//  SDL_game
+//  NEKOPARO
 //
 //  Created by shad0w_walker on 2016/12/14.
 //  Copyright © 2016年 GKP. All rights reserved.
@@ -52,9 +52,9 @@ const SDL_Color BLACK = {0, 0, 0, 80};
            1->black		'#000000'
     '-'    2->red		'#fc0d1e'
     '|'    3->blue		'#182afb'
-    'V'    4->purple	'#ff00ff'
+    'V'    4->yellow	'#fef359'
     '^'    5->green		'#40fd5b'
- lightning 6->yellow	'#fffd38'
+ lightning 6->gold		'#fbbe2e'
 
 */
 #endif /* utility_h */

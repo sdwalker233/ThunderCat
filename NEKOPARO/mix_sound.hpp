@@ -1,6 +1,6 @@
 //
 //  Mix_Sound.hpp
-//  SDL_game
+//  NEKOPARO
 //
 //  Created by shad0w_walker on 2016/12/14.
 //  Copyright © 2016年 GKP. All rights reserved.
