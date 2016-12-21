@@ -42,5 +42,6 @@ public:
 	bool isDead();
 	void retreat();
 	bool isOut();
+	//~Monster();
 };
 

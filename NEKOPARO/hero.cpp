@@ -15,7 +15,8 @@ Hero::Hero()
 	last_time = 0;
 	len[0] = 8;len[1] = 0;len[2] = 4;len[3] = 5;
 	len[4] = 4;len[5] = 4;len[6] = 4;len[7] = 6;
-	for(int i = 0; i < 8; i++){
+	len[8] = 5;len[9] = 4;
+	for(int i = 0; i <= 9; i++){
 		for(int j = 0; j < len[i]; j++){
 			sprintf(filename, "resources/pic/hero/%d%d.png", i, j);
 			heroSurface[i][j] = IMG_Load(filename);

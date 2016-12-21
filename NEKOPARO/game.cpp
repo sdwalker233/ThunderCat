@@ -130,21 +130,25 @@ void Game::createMonster(int m_number)
 void Game::run()
 {
 	scoll("resources/pic/background1.jpg");
-	welcome();
-	
-	lightning.increase();
+	if(welcome()==1) normal();
+	else if(welcome()==2) endless();
 
-//chapter 1
+}
+
+void Game::normal()
+{
+	lightning.increase();
+	//chapter 1
 	scoll("resources/pic/background2.jpg");
 	hero.setPosition(0, 240);
 	hero.setStatus(7);
-//level 1
+	//level 1
 	createMonster(1);
 	monsters[0].setStart(800, 100);
 	monsters[0].setEnd(20, 100);
 	monsters[0].setSpeed(3.0);
 	stage();
-//level 2
+	//level 2
 	createMonster(2);
 	monsters[0].setStart(800, 100);
 	monsters[0].setEnd(20, 100);
@@ -153,7 +157,7 @@ void Game::run()
 	monsters[1].setEnd(20, 300);
 	monsters[1].setSpeed(6.0);
 	stage();
-//leve 3
+	//leve 3
 	createMonster(3);
 	monsters[0].setStart(800, 100);
 	monsters[0].setEnd(20, 100);
@@ -167,17 +171,17 @@ void Game::run()
 	stage();
 	lightning.increase();
 	
-//chapter 2
+	//chapter 2
 	scoll("resources/pic/background3.jpg");
 	hero.setPosition(350, 240);
 	hero.setStatus(7);
-//level 1
+	//level 1
 	createMonster(1);
 	monsters[0].setStart(800, 0);
 	monsters[0].setEnd(350, 250);
 	monsters[0].setSpeed(4.0);
 	stage();
-//level 2
+	//level 2
 	createMonster(2);
 	monsters[0].setStart(0, 0);
 	monsters[0].setEnd(350, 250);
@@ -186,7 +190,7 @@ void Game::run()
 	monsters[1].setEnd(450, 320);
 	monsters[1].setSpeed(4.0);
 	stage();
-//level3
+	//level3
 	createMonster(4);
 	monsters[0].setStart(0, 0);
 	monsters[0].setEnd(350, 250);
@@ -204,9 +208,58 @@ void Game::run()
 	lightning.increase();
 }
 
+void Game::endless()
+{
+	// endless model
+	scoll("resources/pic/background3.jpg");
+	hero.setPosition(350, 240);
+	hero.setStatus(7);
+	int monstercount = 0, stageNum = 0;
+	while (quit == false)
+	{
+		stageNum ++;
+		monstercount += 2;
+		if(monstercount > 10) monstercount = 10;
+		createMonster(monstercount);
+		double startx, starty;
+		for (int i = 0; i < monstercount; i++)
+		{
+			startx = rand() % 800;
+			starty = rand() % 600;
+			if (startx <200 & starty < 100) {
+				monsters[i].setStart(startx, starty);
+				monsters[i].setEnd(350, 250);
+				monsters[i].setSpeed(4.0);
+			}
+			else if (startx > 500 & starty < 100) {
+				monsters[i].setStart(startx, starty);
+				monsters[i].setEnd(350, 250);
+				monsters[i].setSpeed(4.0);
+			}
+			else if (startx < 200 & starty > 380) {
+				monsters[i].setStart(startx, starty);
+				monsters[i].setEnd(350, 420);
+				monsters[i].setSpeed(4.0);
+			}
+			else if (startx > 500 & starty > 380) {
+				monsters[i].setStart(startx, starty);
+				monsters[i].setEnd(450, 320);
+				monsters[i].setSpeed(4.0);
+			}
+			else
+			{	if(i>0)
+				i--;
+			}
+		}
+		stage();
+		if(stageNum%3==0)
+			lightning.increase();
+	}
+}
+
 void Game::stage()
 {
-	const Uint32 FPS=1000/30;//30 is fps
+	const Uint32 FPS=1000/20;//30 is fps
 	Uint32 _FPS_Timer = 0;
 	bool mouse = false;
 	SDL_Point pos;
@@ -271,12 +324,19 @@ void Game::stage()
 			if(monsters[i].isOut()) outnum++;
 			else{
 				if(monsters[i].isDead()) monsters[i].retreat();
-				if(monsters[i].isReachEnd()) life.decrease();
+				if(monsters[i].isReachEnd()){
+					life.decrease();
+					hero.setStatus(9);
+				}
 				if(monsters[i].isReachStart()){}
 			}
 		}
 		if(outnum == monster_number) break;
-		
+		if(life.getLife() == 0){
+			hero.setStatus(8);
+			lose_scence();
+			break;
+		}
 		show();
 		if(SDL_GetTicks()-_FPS_Timer<FPS){
 			SDL_Delay(FPS-SDL_GetTicks()+_FPS_Timer);
@@ -285,3 +345,18 @@ void Game::stage()
 	}
 }
 
+void Game::lose_scence()
+{
+	while(1){
+		show();
+		SDL_Delay(20);
+	}
+}
+
+void Game::win_scence()
+{
+	while(1){
+		show();
+		SDL_Delay(20);
+	}
+}

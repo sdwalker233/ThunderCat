@@ -38,6 +38,10 @@ public:
 	int welcome();
 	void createMonster(int m_number);
 	void scoll(const string& bgName);
+	void normal();
+	void endless();
+	void lose_scence();
+	void win_scence();
 };
 
 #endif /* game_hpp */

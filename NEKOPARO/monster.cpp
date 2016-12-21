@@ -181,3 +181,13 @@ bool Monster::isReachStart()
 	}
 	return false;
 }
+/*
+Monster::~Monster()
+{
+	cout<<"free monster"<<endl;
+	if(monstersurface != nullptr) SDL_FreeSurface(monstersurface);
+	for(int i=2;i<6;i++){
+		if(shapesurface[i] != nullptr) SDL_FreeSurface(shapesurface[i]);
+	}
+}
+ */

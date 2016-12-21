@@ -27,7 +27,7 @@ private:
 	// lightning 6
 	// scared 7
 	// die 8
-	//
+	// hitted 9
 public:
 	Hero();
 	void setPosition(int x, int y, int w=150, int h=150);
