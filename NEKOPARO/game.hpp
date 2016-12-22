@@ -14,6 +14,7 @@
 #include "status.hpp"
 #include "monster.h"
 #include "hero.hpp"
+#include "mix_sound.hpp"
 
 class Game{
 private:
@@ -34,14 +35,16 @@ public:
 	~Game();
 	void run();
 	void stage();
-	void show();
+	void defaultRender();
+	void show(SDL_Texture *extra_tex);
 	int welcome();
 	void createMonster(int m_number);
 	void scoll(const string& bgName);
 	void normal();
 	void endless();
-	void lose_scence();
-	void win_scence();
+	void lose_scene();
+	void win_scene();
+	void pause_scene();
 };
 
 #endif /* game_hpp */

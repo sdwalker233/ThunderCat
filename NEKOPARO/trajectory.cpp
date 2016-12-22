@@ -82,32 +82,32 @@ int Trajectory::recognize()
 		return shape;
 	}
 	
-	if(positions.size() <= 30) return 0;
+	if(positions.size() <= 40) return 0;
 	int lpos, rpos;
 	double laverang, raverang, sumang;
 	sumang = 0;
-	for(lpos=11; lpos <= 30; lpos++){
-		sumang += atan2(1.0*positions[5].y-positions[lpos].y, 1.0*positions[5].x-positions[lpos].x);
+	for(lpos=21; lpos <= 40; lpos++){
+		sumang += atan2(1.0*positions[10].y-positions[lpos].y, 1.0*positions[10].x-positions[lpos].x);
 	}
 	laverang = sumang/20;
 	for(; lpos < positions.size(); lpos++){
-		double tmpang = atan2(1.0*positions[5].y-positions[lpos].y, 1.0*positions[5].x-positions[lpos].x);
+		double tmpang = atan2(1.0*positions[10].y-positions[lpos].y, 1.0*positions[10].x-positions[lpos].x);
 		if(fabs(tmpang-laverang)>0.25) break;
 		sumang += tmpang;
-		laverang = sumang/(lpos-10);
+		laverang = sumang/(lpos-20);
 	}
 	
 	sumang = 0;
 	int lastpos = (int)positions.size()-1;
-	for(rpos = lastpos-11; rpos >= lastpos-30; rpos--){
-		sumang += atan2(1.0*positions[lastpos-5].y-positions[rpos].y, 1.0*positions[lastpos-5].x-positions[rpos].x);
+	for(rpos = lastpos-21; rpos >= lastpos-40; rpos--){
+		sumang += atan2(1.0*positions[lastpos-10].y-positions[rpos].y, 1.0*positions[lastpos-10].x-positions[rpos].x);
 	}
 	raverang = sumang/20;
 	for(; rpos >= 0; rpos--){
-		double tmpang = atan2(1.0*positions[lastpos-5].y-positions[rpos].y, 1.0*positions[lastpos-5].x-positions[rpos].x);
+		double tmpang = atan2(1.0*positions[lastpos-10].y-positions[rpos].y, 1.0*positions[lastpos-10].x-positions[rpos].x);
 		if(fabs(tmpang-raverang)>0.25) break;
 		sumang += tmpang;
-		raverang = sumang/(lastpos-rpos-10);
+		raverang = sumang/(lastpos-rpos-20);
 	}
 	//printf(" %d %d %d\n",lpos,rpos,positions.size());
 	//printf("  %f %f\n", laverang, raverang);
@@ -153,6 +153,7 @@ void Trajectory::show()
 {
 	if(start_time > 0 && clock() - start_time>ONE_SECOND)
 		setVisible(false);
+	if(positions.size() < 5) return;
 	SDL_Rect rect = {0, 0, dotsize, dotsize};
 	
 	//if(lasti == 0) clearSurface();

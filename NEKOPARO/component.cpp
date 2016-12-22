@@ -28,7 +28,7 @@ SDL_Texture* Component::getTexture()
 
 void Component::clearSurface()
 {
-	if(sur != nullptr) SDL_FreeSurface(sur);
+	if(sur != NULL) SDL_FreeSurface(sur);
 	sur = IMG_Load(emptyPNG);
 }
 
@@ -39,7 +39,7 @@ void Component::addSurface(SDL_Surface *_sur, SDL_Rect *_rect)
 
 void Component::finishSurface()
 {
-	if(tex != nullptr) SDL_DestroyTexture(tex);
+	if(tex != NULL) SDL_DestroyTexture(tex);
 	tex = SDL_CreateTextureFromSurface(ren, sur);
 }
 

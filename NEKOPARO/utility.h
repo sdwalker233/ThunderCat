@@ -44,6 +44,7 @@ const int MAX_LIFE = 5;
 const int MAX_LIGHTNING = 3;
 
 #define emptyPNG "resources/pic/empty.png"
+#define blackPNG "resources/pic/black.png"
 
 const SDL_Color BLACK = {0, 0, 0, 80};
 /*
@@ -55,7 +56,9 @@ const SDL_Color BLACK = {0, 0, 0, 80};
     'V'    4->yellow	'#fef359'
     '^'    5->green		'#40fd5b'
  lightning 6->gold		'#fbbe2e'
-
+ 
 */
+
+
 #endif /* utility_h */
 

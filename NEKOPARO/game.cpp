@@ -5,9 +5,7 @@
 //  Created by shad0w_walker on 2016/12/14.
 //  Copyright © 2016年 GKP. All rights reserved.
 //
-
 #include "game.hpp"
-#include "mix_sound.hpp"
 
 Game::Game()
 {
@@ -33,7 +31,7 @@ Game::~Game()
 	SDL_DestroyWindow(win);
 }
 
-void Game::show()
+void Game::show(SDL_Texture *extra_tex = NULL)
 {
 	SDL_RenderClear(ren);
 	SDL_RenderCopy(ren, bgTexture, NULL, &FULL_RECT);
@@ -52,6 +50,7 @@ void Game::show()
 	SDL_RenderCopy(ren, lightning.getTexture(), NULL, &FULL_RECT);
 	score.show();
 	SDL_RenderCopy(ren, score.getTexture(), NULL, &FULL_RECT);
+	SDL_RenderCopy(ren, extra_tex, NULL, &FULL_RECT);
 	SDL_RenderPresent(ren);
 }
 
@@ -72,9 +71,12 @@ void Game::scoll(const string &bgName)
 	SDL_DestroyTexture(last_bg);
 }
 
-/*返回1：关卡模式
- 返回2：无尽模式
- 返回3：退出*/
+/*
+ 1: normal
+ 2: endless
+ 3: exit
+ */
+
 int Game::welcome()
 {
 	SDL_Texture *roundmode,*endlessmode,*exit;
@@ -108,7 +110,6 @@ int Game::welcome()
 						return 2;
 					if (event.button.x >= 307 && event.button.x <= 494 && event.button.y >= 350 && event.button.y <= 435)
 						return 3;
-					
 					break;
 			}
 		}
@@ -119,7 +120,9 @@ int Game::welcome()
 void Game::createMonster(int m_number)
 {
 	monster_number = m_number;
+	
 	monsters.clear();
+	//monsters.resize(m_number);
 	for(int i = 0; i < monster_number; i++){
 		Monster M;
 		M.setRender(ren);
@@ -139,7 +142,7 @@ void Game::normal()
 {
 	lightning.increase();
 	//chapter 1
-	scoll("resources/pic/background2.jpg");
+	if(quit == false) scoll("resources/pic/background2.jpg");
 	hero.setPosition(0, 240);
 	hero.setStatus(7);
 	//level 1
@@ -172,7 +175,7 @@ void Game::normal()
 	lightning.increase();
 	
 	//chapter 2
-	scoll("resources/pic/background3.jpg");
+	if(quit == false) scoll("resources/pic/background3.jpg");
 	hero.setPosition(350, 240);
 	hero.setStatus(7);
 	//level 1
@@ -214,11 +217,12 @@ void Game::endless()
 	scoll("resources/pic/background3.jpg");
 	hero.setPosition(350, 240);
 	hero.setStatus(7);
-	int monstercount = 0, stageNum = 0;
+	int monstercount = 1, stageNum = 0;
 	while (quit == false)
 	{
 		stageNum ++;
-		monstercount += 2;
+		if((stageNum+1)%3==0)
+			monstercount += 1;
 		if(monstercount > 10) monstercount = 10;
 		createMonster(monstercount);
 		double startx, starty;
@@ -226,31 +230,42 @@ void Game::endless()
 		{
 			startx = rand() % 800;
 			starty = rand() % 600;
-			if (startx <200 & starty < 100) {
+			if (startx <200 && starty < 100) {
 				monsters[i].setStart(startx, starty);
 				monsters[i].setEnd(350, 250);
-				monsters[i].setSpeed(4.0);
+				monsters[i].setSpeed(2.0);
 			}
-			else if (startx > 500 & starty < 100) {
+			else if (startx > 500 && starty < 100) {
 				monsters[i].setStart(startx, starty);
 				monsters[i].setEnd(350, 250);
-				monsters[i].setSpeed(4.0);
+				monsters[i].setSpeed(2.0);
 			}
-			else if (startx < 200 & starty > 380) {
+			else if (startx < 200 && starty > 380) {
 				monsters[i].setStart(startx, starty);
 				monsters[i].setEnd(350, 420);
-				monsters[i].setSpeed(4.0);
+				monsters[i].setSpeed(2.0);
 			}
-			else if (startx > 500 & starty > 380) {
+			else if (startx > 500 && starty > 380) {
 				monsters[i].setStart(startx, starty);
 				monsters[i].setEnd(450, 320);
-				monsters[i].setSpeed(4.0);
+				monsters[i].setSpeed(2.0);
 			}
 			else
 			{	if(i>0)
 				i--;
 			}
 		}
+		if(stageNum>=3)
+			monsters[monstercount/4].setSpeed(4.0);
+		if(stageNum>=6)
+			monsters[monstercount / 2].setSpeed(5.0);
+		if(stageNum>=10)
+			monsters[monstercount*3 / 4].setSpeed(6.0);
+		if (stageNum >= 14)
+			monsters[monstercount * 3 / 8].setSpeed(7.0);
+		if (stageNum >= 20)
+			monsters[monstercount * 5/ 8].setSpeed(8.0);
+		
 		stage();
 		if(stageNum%3==0)
 			lightning.increase();
@@ -299,6 +314,10 @@ void Game::stage()
 						y = event.button.y;
 						mouse = false;
 						//printf("up: %d, %d\n", x, y);
+						if(x>=windowWidth-50 && y>=windowHeight-50){
+							pause_scene();
+							break;
+						}
 						
 						int t = tra.recognize();
 						hero.setStatus(t);
@@ -334,7 +353,7 @@ void Game::stage()
 		if(outnum == monster_number) break;
 		if(life.getLife() == 0){
 			hero.setStatus(8);
-			lose_scence();
+			lose_scene();
 			break;
 		}
 		show();
@@ -345,18 +364,45 @@ void Game::stage()
 	}
 }
 
-void Game::lose_scence()
+void Game::lose_scene()
 {
-	while(1){
+	for(int i=1;i<=100;i++){
 		show();
 		SDL_Delay(20);
 	}
+	while(1) SDL_Delay(1000);
 }
 
-void Game::win_scence()
+void Game::win_scene()
 {
-	while(1){
+	for(int i=1;i<=100;i++){
 		show();
 		SDL_Delay(20);
 	}
+	while(1) SDL_Delay(1000);
+}
+
+void Game::pause_scene()
+{
+	SDL_Surface *pausesur = IMG_Load("resources/pic/pause.png");
+	SDL_SetSurfaceBlendMode(pausesur,SDL_BLENDMODE_BLEND);
+	SDL_SetSurfaceAlphaMod(pausesur,150);
+	SDL_Texture *pausetex = SDL_CreateTextureFromSurface(ren, pausesur);
+	show(pausetex);
+	bool q = false;
+	while (!q) {
+		while (SDL_PollEvent(&event)) {
+			switch (event.type) {
+				case SDL_QUIT:
+					q = true;
+					quit = true;
+					break;
+				case SDL_MOUSEBUTTONDOWN:
+					q = true;
+					break;
+			}
+		}
+	}
+	SDL_FreeSurface(pausesur);
+	SDL_DestroyTexture(pausetex);
 }

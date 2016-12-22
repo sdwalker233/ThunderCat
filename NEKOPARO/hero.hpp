@@ -14,9 +14,9 @@
 
 class Hero: public Component{
 private:
-	int staus, nextstatus, p;
-	SDL_Surface* heroSurface[10][10];
-	int len[10];
+	int staus, p;
+	SDL_Surface* heroSurface[15][12];
+	int len[15];
 	clock_t last_time;
 	SDL_Rect position;
 	// 正常 0
@@ -28,6 +28,7 @@ private:
 	// scared 7
 	// die 8
 	// hitted 9
+	// win 10
 public:
 	Hero();
 	void setPosition(int x, int y, int w=150, int h=150);
