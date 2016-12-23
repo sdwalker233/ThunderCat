@@ -35,6 +35,11 @@ int Life::getLife()
 	return count;
 }
 
+void Life::set(int x)
+{
+	count = x;
+}
+
 void Life::show()
 {
 	clearSurface();
@@ -73,6 +78,11 @@ int Score::getScore()
 	return score;
 }
 
+void Score::set(int x)
+{
+	score = x;
+}
+
 void Score::show()
 {
 	stringstream stream;
@@ -109,6 +119,11 @@ Lightning::Lightning()
 int Lightning::getNum()
 {
 	return num;
+}
+
+void Lightning::set(int x)
+{
+	num = x;
 }
 
 void Lightning::increase()

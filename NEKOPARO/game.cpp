@@ -19,7 +19,17 @@ Game::Game()
 	lightning.setRender(ren);
 	hero.setRender(ren);
 	bgTexture = nullptr;
+	pausebotton = IMG_LoadTexture(ren, "resources/pic/pausebutton.png");
+	restartbotton = IMG_LoadTexture(ren, "resources/pic/restartbutton.png");
+	SDL_Surface *pausesur = IMG_Load("resources/pic/pause.png");
+	SDL_SetSurfaceBlendMode(pausesur,SDL_BLENDMODE_BLEND);
+	SDL_SetSurfaceAlphaMod(pausesur,150);
+	pausetex = SDL_CreateTextureFromSurface(ren, pausesur);
+	SDL_FreeSurface(pausesur);
+	wintex = pausetex;
+	losetex = pausetex;
 	
+	ingame = false;
 	quit = false;
 	EffectSound miao = EffectSound("resources/music/miao.wav");
 	miao.play();
@@ -31,14 +41,14 @@ Game::~Game()
 	SDL_DestroyWindow(win);
 }
 
-void Game::show(SDL_Texture *extra_tex = NULL)
+void Game::show(SDL_Texture *extra_tex = NULL, const SDL_Rect *extra_rect = &FULL_RECT)
 {
 	SDL_RenderClear(ren);
 	SDL_RenderCopy(ren, bgTexture, NULL, &FULL_RECT);
 	life.show();
 	SDL_RenderCopy(ren, life.getTexture(), NULL, &FULL_RECT);
 	for(int i = 0; i < monster_number; i++){
-		monsters[i].move();
+		if(life.getLife()) monsters[i].move();
 		monsters[i].show();
 		SDL_RenderCopy(ren, monsters[i].getTexture(), NULL, &FULL_RECT);
 	}
@@ -50,7 +60,13 @@ void Game::show(SDL_Texture *extra_tex = NULL)
 	SDL_RenderCopy(ren, lightning.getTexture(), NULL, &FULL_RECT);
 	score.show();
 	SDL_RenderCopy(ren, score.getTexture(), NULL, &FULL_RECT);
-	SDL_RenderCopy(ren, extra_tex, NULL, &FULL_RECT);
+	if(ingame){
+		SDL_Rect rect = {windowWidth-50, windowHeight-50, 50, 50};
+		SDL_RenderCopy(ren, pausebotton, NULL, &rect);
+		rect.x-=50;
+		SDL_RenderCopy(ren, restartbotton, NULL, &rect);
+	}
+	SDL_RenderCopy(ren, extra_tex, NULL, extra_rect);
 	SDL_RenderPresent(ren);
 }
 
@@ -132,10 +148,18 @@ void Game::createMonster(int m_number)
 
 void Game::run()
 {
-	scoll("resources/pic/background1.jpg");
-	if(welcome()==1) normal();
-	else if(welcome()==2) endless();
-
+	while(!quit){
+		scoll("resources/pic/background1.jpg");
+		int op = welcome();
+		ingame = true;
+		life.set(MAX_LIFE);
+		lightning.set(0);
+		score.set(0);
+		if(op == 1) normal();
+		else if(op == 2) endless();
+		else break;
+		ingame = false;
+	}
 }
 
 void Game::normal()
@@ -150,7 +174,7 @@ void Game::normal()
 	monsters[0].setStart(800, 100);
 	monsters[0].setEnd(20, 100);
 	monsters[0].setSpeed(3.0);
-	stage();
+	if(stage()) return;
 	//level 2
 	createMonster(2);
 	monsters[0].setStart(800, 100);
@@ -159,7 +183,7 @@ void Game::normal()
 	monsters[1].setStart(800, 300);
 	monsters[1].setEnd(20, 300);
 	monsters[1].setSpeed(6.0);
-	stage();
+	if(stage()) return;
 	//leve 3
 	createMonster(3);
 	monsters[0].setStart(800, 100);
@@ -171,8 +195,9 @@ void Game::normal()
 	monsters[2].setStart(800, 400);
 	monsters[2].setEnd(20, 400);
 	monsters[2].setSpeed(6.0);
-	stage();
+	if(stage()) return;
 	lightning.increase();
+	win_scene();
 	
 	//chapter 2
 	if(quit == false) scoll("resources/pic/background3.jpg");
@@ -183,7 +208,7 @@ void Game::normal()
 	monsters[0].setStart(800, 0);
 	monsters[0].setEnd(350, 250);
 	monsters[0].setSpeed(4.0);
-	stage();
+	if(stage()) return;
 	//level 2
 	createMonster(2);
 	monsters[0].setStart(0, 0);
@@ -192,7 +217,7 @@ void Game::normal()
 	monsters[1].setStart(800, 600);
 	monsters[1].setEnd(450, 320);
 	monsters[1].setSpeed(4.0);
-	stage();
+	if(stage()) return;
 	//level3
 	createMonster(4);
 	monsters[0].setStart(0, 0);
@@ -207,7 +232,7 @@ void Game::normal()
 	monsters[3].setStart(0, 600);
 	monsters[3].setEnd(350, 420);
 	monsters[3].setSpeed(4.0);
-	stage();
+	if(stage()) return;
 	lightning.increase();
 }
 
@@ -266,23 +291,30 @@ void Game::endless()
 		if (stageNum >= 20)
 			monsters[monstercount * 5/ 8].setSpeed(8.0);
 		
-		stage();
+		if(stage()) return;
 		if(stageNum%3==0)
 			lightning.increase();
 	}
 }
 
-void Game::stage()
+void Game::guide()
+{
+	
+}
+
+int Game::stage()
 {
 	const Uint32 FPS=1000/20;//30 is fps
 	Uint32 _FPS_Timer = 0;
 	bool mouse = false;
 	SDL_Point pos;
 	int x, y;
-	while (!quit){
+	bool q = false;
+	while (!q){
 		while (SDL_PollEvent(&event)){
 			switch (event.type){
 				case SDL_QUIT:
+					q = true;
 					quit = true;
 					break;
 				case SDL_MOUSEBUTTONDOWN:
@@ -318,7 +350,10 @@ void Game::stage()
 							pause_scene();
 							break;
 						}
-						
+						if(x>=windowWidth-100 && y>=windowHeight-50){
+							q = true;
+							return 1;
+						}
 						int t = tra.recognize();
 						hero.setStatus(t);
 						if(t == 6){
@@ -352,9 +387,8 @@ void Game::stage()
 		}
 		if(outnum == monster_number) break;
 		if(life.getLife() == 0){
-			hero.setStatus(8);
 			lose_scene();
-			break;
+			return 1;
 		}
 		show();
 		if(SDL_GetTicks()-_FPS_Timer<FPS){
@@ -362,33 +396,51 @@ void Game::stage()
 		}
 		_FPS_Timer=SDL_GetTicks();
 	}
+	return 0;
 }
 
 void Game::lose_scene()
 {
-	for(int i=1;i<=100;i++){
+	hero.setStatus(8);
+	for(int i=1;i<=40;i++){
 		show();
-		SDL_Delay(20);
+		SDL_Delay(30);
 	}
-	while(1) SDL_Delay(1000);
+	SDL_Rect rect = {0, 600, windowWidth, windowHeight};
+	for(int i = windowHeight; i >= 0; i -= 7){
+		rect.y = i;
+		show(losetex, &rect);
+		SDL_Delay(5);
+	}
+	wait_for_click();
 }
 
 void Game::win_scene()
 {
-	for(int i=1;i<=100;i++){
+	hero.setStatus(10);
+	for(int i=1;i<=50;i++){
 		show();
-		SDL_Delay(20);
+		SDL_Delay(30);
 	}
-	while(1) SDL_Delay(1000);
+	
+	SDL_Rect rect = {0, 600, windowWidth, windowHeight};
+	for(int i = windowHeight; i >= 0; i -= 7){
+		rect.y = i;
+		show(wintex, &rect);
+		SDL_Delay(5);
+	}
+	wait_for_click();
+	hero.setStatus(0);
 }
 
 void Game::pause_scene()
 {
-	SDL_Surface *pausesur = IMG_Load("resources/pic/pause.png");
-	SDL_SetSurfaceBlendMode(pausesur,SDL_BLENDMODE_BLEND);
-	SDL_SetSurfaceAlphaMod(pausesur,150);
-	SDL_Texture *pausetex = SDL_CreateTextureFromSurface(ren, pausesur);
 	show(pausetex);
+	wait_for_click();
+}
+
+void Game::wait_for_click()
+{
 	bool q = false;
 	while (!q) {
 		while (SDL_PollEvent(&event)) {
@@ -403,6 +455,4 @@ void Game::pause_scene()
 			}
 		}
 	}
-	SDL_FreeSurface(pausesur);
-	SDL_DestroyTexture(pausetex);
 }

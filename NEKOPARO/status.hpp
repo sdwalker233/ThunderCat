@@ -20,6 +20,7 @@ public:
 	void increase();
 	void decrease();
 	int getLife();
+	void set(int x);
 	void show();
 };
 
@@ -31,6 +32,7 @@ public:
 	Score();
 	void add(int _score);
 	int getScore();
+	void set(int x);
 	void show();
 	//~Score();
 };
@@ -42,6 +44,7 @@ private:
 public:
 	Lightning();
 	int getNum();
+	void set(int x);
 	void increase();
 	void decrease();
 	void show();

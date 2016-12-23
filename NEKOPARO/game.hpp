@@ -28,15 +28,16 @@ private:
 	vector<Monster> monsters;
 	Hero hero;
 	int monster_number;
-	SDL_Texture *bgTexture;
+	SDL_Texture *bgTexture, *pausebotton, *restartbotton, *pausetex, *wintex, *losetex;
+	bool ingame;
 	bool quit;
 public:
 	Game();
 	~Game();
 	void run();
-	void stage();
+	int stage();
 	void defaultRender();
-	void show(SDL_Texture *extra_tex);
+	void show(SDL_Texture *extra_tex, const SDL_Rect *extra_rect);
 	int welcome();
 	void createMonster(int m_number);
 	void scoll(const string& bgName);
@@ -45,6 +46,8 @@ public:
 	void lose_scene();
 	void win_scene();
 	void pause_scene();
+	void wait_for_click();
+	void guide();
 };
 
 #endif /* game_hpp */

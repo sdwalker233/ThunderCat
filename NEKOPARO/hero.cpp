@@ -41,7 +41,7 @@ void Hero::show()
 	if(clock() - last_time<ONE_SECOND/8) return;
 	last_time = clock();
 	clearSurface();
-	cout<<staus<<" "<<p<<endl;
+	//cout<<staus<<" "<<p<<endl;
 	addSurface(heroSurface[staus][p++], &position);
 	if(p==len[staus]){
 		if(staus == 8 || staus == 10){
