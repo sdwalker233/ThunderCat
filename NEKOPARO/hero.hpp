@@ -11,6 +11,7 @@
 
 #include "utility.h"
 #include "component.hpp"
+#include "mix_sound.hpp"
 
 class Hero: public Component{
 private:
@@ -27,7 +28,7 @@ private:
 	// lightning 6
 	// scared 7
 	// die 8
-	// hitted 9
+	// hurt 9
 	// win 10
 public:
 	Hero();
@@ -36,4 +37,4 @@ public:
 	void show();
 };
 
-#endif /* hero_hpp */
+#endif 

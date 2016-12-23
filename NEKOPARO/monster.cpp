@@ -5,7 +5,7 @@ string generateLabel()
 {
 	int MAXTIME=4,count,n;
 	string res="";
-	count=1+rand()%MAXTIME;		//最多产生5个符号
+	count=1+rand()%MAXTIME;		
 	for(int i=0;i<count;i++)
 	{
 		n=rand()%MAXTIME + 2;

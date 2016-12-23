@@ -19,6 +19,7 @@ Trajectory::Trajectory()
 	dot[5] = IMG_Load("resources/pic/dot_green.png");
 	dot[6] = IMG_Load("resources/pic/dot_gold.png");
 	du = new EffectSound("resources/music/du.wav");
+	lightning = new EffectSound("resources/music/lightning.wav");
 }
 
 void Trajectory::clear()
@@ -112,7 +113,7 @@ int Trajectory::recognize()
 	//printf(" %d %d %d\n",lpos,rpos,positions.size());
 	//printf("  %f %f\n", laverang, raverang);
 	if(laverang>-M_PI/2 && laverang<0 &&raverang>M_PI/2 && raverang<M_PI && lpos<rpos){
-		du->play();
+		lightning->play();
 		shape = 6;
 		start_time = clock();
 		return shape;
@@ -170,3 +171,12 @@ void Trajectory::show()
 	finishSurface();
 	lasti = (int)positions.size();
 }
+
+SDL_Texture* Trajectory::getTexture()
+{
+	if(start_time > 0 && clock() - start_time>ONE_SECOND)
+		setVisible(false);
+	if(visible)	return tex;
+	else return nullptr;
+}
+
