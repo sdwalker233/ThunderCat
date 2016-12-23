@@ -16,18 +16,22 @@ Life::Life()
 	count = MAX_LIFE;
 	lifeSurface1 = IMG_Load("resources/pic/life1.png");
 	lifeSurface2 = IMG_Load("resources/pic/life2.png");
+	hurt = new EffectSound("resources/music/hurt.wav");
+	cured = new EffectSound("resources/music/cured.wav");
 }
 
 void Life::increase()
 {
 	count++;
 	if(count > MAX_LIFE) count = MAX_LIFE;
+	cured->play();
 }
 
 void Life::decrease()
 {
 	count--;
 	if(count < 0) count = 0;
+	hurt->play();
 }
 
 int Life::getLife()

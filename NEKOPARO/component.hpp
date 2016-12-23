@@ -21,7 +21,7 @@ protected:
 public:
 	Component();
 	void setRender(SDL_Renderer *_ren);
-	SDL_Texture* getTexture();
+	virtual SDL_Texture* getTexture();
 	virtual void clearSurface();
 	void addSurface(SDL_Surface* _sur, SDL_Rect* _rect);
 	void finishSurface();

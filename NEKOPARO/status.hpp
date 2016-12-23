@@ -11,10 +11,13 @@
 
 #include "utility.h"
 #include "component.hpp"
+#include "mix_sound.hpp"
+
 class Life: public Component{
 private:
 	int count;
 	SDL_Surface *lifeSurface1, *lifeSurface2;
+	EffectSound *hurt, *cured;
 public:
 	Life();
 	void increase();

@@ -18,7 +18,7 @@ private:
 	SDL_Surface *dot[7];
 	vector<SDL_Point> positions;
 	int shape;
-	EffectSound *du;
+	EffectSound *du, *lightning;
 	clock_t start_time;
 	int lasti, lastshape;
 public:
@@ -29,6 +29,7 @@ public:
 	void show();
 	void clear();
 	void clearSurface();
+	SDL_Texture* getTexture();
 };
 
 #endif /* trajectory_hpp */
