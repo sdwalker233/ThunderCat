@@ -166,8 +166,9 @@ void Game::normal()
 {
 	lightning.increase();
 	//chapter 1
-	if(quit == false) scoll("resources/pic/background2.jpg");
-	hero.setPosition(0, 240);
+	if(quit) return;
+	scoll("resources/pic/bg/background2.png");
+	hero.setPosition(0, 400);
 	hero.setStatus(7);
 	//level 1
 	createMonster(1);
@@ -198,9 +199,9 @@ void Game::normal()
 	if(stage()) return;
 	lightning.increase();
 	win_scene();
-	
+	if(quit) return;
 	//chapter 2
-	if(quit == false) scoll("resources/pic/background3.jpg");
+	scoll("resources/pic/bg/background3.png");
 	hero.setPosition(350, 240);
 	hero.setStatus(7);
 	//level 1
@@ -239,7 +240,7 @@ void Game::normal()
 void Game::endless()
 {
 	// endless model
-	scoll("resources/pic/background3.jpg");
+	scoll("resources/pic/bg/background5.png");
 	hero.setPosition(350, 240);
 	hero.setStatus(7);
 	int monstercount = 1, stageNum = 0;
@@ -255,22 +256,22 @@ void Game::endless()
 		{
 			startx = rand() % 800;
 			starty = rand() % 600;
-			if (startx <200 && starty < 100) {
+			if (startx <180 && starty < 90) {
 				monsters[i].setStart(startx, starty);
 				monsters[i].setEnd(350, 250);
 				monsters[i].setSpeed(2.0);
 			}
-			else if (startx > 500 && starty < 100) {
+			else if (startx > 520 && starty < 90) {
 				monsters[i].setStart(startx, starty);
 				monsters[i].setEnd(350, 250);
 				monsters[i].setSpeed(2.0);
 			}
-			else if (startx < 200 && starty > 380) {
+			else if (startx < 180 && starty > 390) {
 				monsters[i].setStart(startx, starty);
 				monsters[i].setEnd(350, 420);
 				monsters[i].setSpeed(2.0);
 			}
-			else if (startx > 500 && starty > 380) {
+			else if (startx > 520 && starty > 390) {
 				monsters[i].setStart(startx, starty);
 				monsters[i].setEnd(450, 320);
 				monsters[i].setSpeed(2.0);
@@ -304,6 +305,7 @@ void Game::guide()
 
 int Game::stage()
 {
+	if(quit) return 1;
 	const Uint32 FPS=1000/20;//30 is fps
 	Uint32 _FPS_Timer = 0;
 	bool mouse = false;
@@ -407,7 +409,7 @@ void Game::lose_scene()
 		SDL_Delay(30);
 	}
 	SDL_Rect rect = {0, 600, windowWidth, windowHeight};
-	for(int i = windowHeight; i >= 0; i -= 7){
+	for(int i = windowHeight; i >= 0; i -= 15){
 		rect.y = i;
 		show(losetex, &rect);
 		SDL_Delay(5);
@@ -424,7 +426,7 @@ void Game::win_scene()
 	}
 	
 	SDL_Rect rect = {0, 600, windowWidth, windowHeight};
-	for(int i = windowHeight; i >= 0; i -= 7){
+	for(int i = windowHeight; i >= 0; i -= 15){
 		rect.y = i;
 		show(wintex, &rect);
 		SDL_Delay(5);

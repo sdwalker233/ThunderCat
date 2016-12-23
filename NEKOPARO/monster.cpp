@@ -17,6 +17,12 @@ string generateLabel()
 
 Monster::Monster()
 {
+	int MAXTIME = 20,monsterindex;
+	char filename[50];
+	monsterindex = 1 + rand() % MAXTIME;
+	sprintf(filename, "resources/pic/monster/%d.png", monsterindex);
+	monstersurface= IMG_Load(filename);
+	
 	label=generateLabel();
 	type=0;
 	startpointX=0.0;
@@ -26,7 +32,6 @@ Monster::Monster()
 	currentX=200.0;
 	currentY=200.0;
 	speed=1.0;
-	monstersurface=IMG_Load("resources/pic/Aang.png");
 	for(int i=2;i<6;i++)
 	{
 		char filename[30];
@@ -34,7 +39,7 @@ Monster::Monster()
 		shapesurface[i] = IMG_Load(filename);
 	}
 	isout = false;
-	//cout<<label<<endl;
+	
 }
 
 void Monster::show()
