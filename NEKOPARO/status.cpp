@@ -22,16 +22,18 @@ Life::Life()
 
 void Life::increase()
 {
-	count++;
-	if(count > MAX_LIFE) count = MAX_LIFE;
-	cured->play();
+	if(count < MAX_LIFE){
+		count++;
+		cured->play();
+	}
 }
 
 void Life::decrease()
 {
-	count--;
-	if(count < 0) count = 0;
-	hurt->play();
+	if(count > 0){
+		count--;
+		hurt->play();
+	}
 }
 
 int Life::getLife()
@@ -68,8 +70,14 @@ void Life::show()
 Score::Score()
 {
 	score = 0;
+	col = BLACK;
 	font = TTF_OpenFont("resources/font/nekoparo.ttf", 50);
 	if(font == nullptr) cout<<"font not found"<<endl;
+}
+
+void Score::setColor(SDL_Color _col)
+{
+	col = _col;
 }
 
 void Score::add(int _score)
@@ -95,7 +103,7 @@ void Score::show()
 	stream >> text;
 	while(text.length() < 8) text.insert(0, "0");
 	//cout<<text<<endl;
-	SDL_Surface *_sur = TTF_RenderText_Blended(font, text.c_str(), BLACK);
+	SDL_Surface *_sur = TTF_RenderText_Blended(font, text.c_str(), col);
 	SDL_Rect rect = {550, -7, 100, 20};
 	clearSurface();
 	addSurface(_sur, &rect);
@@ -118,6 +126,7 @@ Lightning::Lightning()
 	num = 0;
 	lightningSurface1 = IMG_Load("resources/pic/lightning1.png");
 	//lightningSurface2 = IMG_Load("resources/pic/lightning2.png");
+	add = new EffectSound("resources/music/addlightning.wav");
 }
 
 int Lightning::getNum()
@@ -132,14 +141,17 @@ void Lightning::set(int x)
 
 void Lightning::increase()
 {
-	num++;
-	if(num>MAX_LIGHTNING) num = MAX_LIGHTNING;
+	if(num < MAX_LIGHTNING){
+		num++;
+		add->play();
+	}
 }
 
 void Lightning::decrease()
 {
-	num--;
-	if(num<0) num = 0;
+	if(num > 0){
+		num--;
+	}
 }
 
 void Lightning::show()

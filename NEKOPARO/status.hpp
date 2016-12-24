@@ -31,12 +31,14 @@ class Score: public Component{
 private:
 	int score;
 	TTF_Font *font;
+	SDL_Color col;
 public:
 	Score();
 	void add(int _score);
 	int getScore();
 	void set(int x);
 	void show();
+	void setColor(SDL_Color _col);
 	//~Score();
 };
 
@@ -44,6 +46,7 @@ class Lightning: public Component{
 private:
 	int num;
 	SDL_Surface *lightningSurface1, *lightningSurface2;
+	EffectSound *add;
 public:
 	Lightning();
 	int getNum();

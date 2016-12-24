@@ -31,7 +31,8 @@ private:
 	SDL_Texture *bgTexture, *pausebotton, *restartbotton, *pausetex, *wintex, *losetex;
 	bool ingame;
 	bool quit;
-	EffectSound *die;
+	EffectSound *die, *win1, *win2, *endlessend, *lose, *start, *click;
+	int comb;
 public:
 	Game();
 	~Game();

@@ -20,6 +20,7 @@ private:
 	SDL_Surface *monstersurface;
 	SDL_Surface *shapesurface[6];
 	bool isout;
+	int minlabel,maxlabel;
 public:
 	Monster();
 	void show();
@@ -38,10 +39,12 @@ public:
 	void move();
 	bool isReachEnd();
 	bool isReachStart();
-	void deleteLabel(int ch);
+	int deleteLabel(int ch);
 	bool isDead();
 	void retreat();
 	bool isOut();
+	string generateLabel(int l, int r);
+	void setLabelLen(int l, int r);
 	//~Monster();
 };
 

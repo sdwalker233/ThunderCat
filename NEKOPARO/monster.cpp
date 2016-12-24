@@ -1,11 +1,11 @@
 #include"monster.h"
 
 
-string generateLabel()
+string Monster::generateLabel(int l = 1, int r = 4)
 {
 	int MAXTIME=4,count,n;
 	string res="";
-	count=1+rand()%MAXTIME;		//最多产生5个符号
+	count=l+rand()%(r-l+1);
 	for(int i=0;i<count;i++)
 	{
 		n=rand()%MAXTIME + 2;
@@ -24,7 +24,6 @@ Monster::Monster()
 	monstersurface= IMG_Load(filename);
 	
 	label=generateLabel();
-	type=0;
 	startpointX=0.0;
 	startpointY=0.0;
 	endingpointX=300.0;
@@ -39,7 +38,11 @@ Monster::Monster()
 		shapesurface[i] = IMG_Load(filename);
 	}
 	isout = false;
-	
+}
+
+void Monster::setLabelLen(int l, int r)
+{
+	label=generateLabel(l, r);
 }
 
 void Monster::show()
@@ -152,10 +155,17 @@ bool Monster::isReachEnd()
 	else return false;
 }
 
-void Monster::deleteLabel(int t)
+int Monster::deleteLabel(int t)
 {
-	if(t == 6) label = "";
-	if(label.length() && label[0] == '0'+t) label = label.substr(1, label.length());
+	if(t == 6){
+		label = "";
+		return 1;
+	}
+	if(label.length() && label[0] == '0'+t){
+		label = label.substr(1, label.length());
+		return 1;
+	}
+	return 0;
 }
 
 bool Monster::isDead()

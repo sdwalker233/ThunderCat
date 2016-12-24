@@ -49,6 +49,7 @@ void Trajectory::addPostion(SDL_Point point)
 
 int Trajectory::recognize()
 {
+	start_time = clock();
 	if(positions.size() < 10) return 0;
 	int max_x=0, max_y=0, min_x=1000, min_y=1000;
 	int max_x_pos=0, max_y_pos=0, min_x_pos=0, min_y_pos=0;
@@ -73,13 +74,11 @@ int Trajectory::recognize()
 	if(max_x-min_x>4*(max_y-min_y)){
 		shape = 2;
 		du->play();
-		start_time = clock();
 		return shape;
 	}
 	if(max_y-min_y>4*(max_x-min_x)){
 		shape = 3;
 		du->play();
-		start_time = clock();
 		return shape;
 	}
 	
@@ -115,20 +114,17 @@ int Trajectory::recognize()
 	if(laverang>-M_PI/2 && laverang<0 &&raverang>M_PI/2 && raverang<M_PI && lpos<rpos){
 		lightning->play();
 		shape = 6;
-		start_time = clock();
 		return shape;
 	}
 	
 	if(laverang>-M_PI && laverang<-M_PI/2 && raverang>-M_PI/2 && raverang<0){
 		shape = 4;
 		du->play();
-		start_time = clock();
 		return shape;
 	}
 	if(laverang>M_PI/2 && laverang<M_PI && raverang>0 && raverang<M_PI/2){
 		shape = 5;
 		du->play();
-		start_time = clock();
 		return shape;
 	}
 	/*if(fabs(max_y_pos-(int)positions.size()/2)<fabs(min_y_pos-(int)positions.size()/2.0)){
@@ -174,9 +170,9 @@ void Trajectory::show()
 
 SDL_Texture* Trajectory::getTexture()
 {
+	
 	if(start_time > 0 && clock() - start_time>ONE_SECOND)
 		setVisible(false);
 	if(visible)	return tex;
 	else return nullptr;
 }
-

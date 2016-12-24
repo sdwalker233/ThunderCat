@@ -26,14 +26,22 @@ Game::Game()
 	SDL_SetSurfaceAlphaMod(pausesur,150);
 	pausetex = SDL_CreateTextureFromSurface(ren, pausesur);
 	SDL_FreeSurface(pausesur);
-	wintex = pausetex;
-	losetex = pausetex;
+	wintex = IMG_LoadTexture(ren, "resources/pic/win.png");
+	losetex = IMG_LoadTexture(ren, "resources/pic/lose.png");
 	
 	
 	ingame = false;
 	quit = false;
-	EffectSound miao = EffectSound("resources/music/miao.wav");
+	
 	die = new EffectSound("resources/music/die.wav");
+	win1 = new EffectSound("resources/music/win1.wav");
+	win2 = new EffectSound("resources/music/win2.wav");
+	endlessend = new EffectSound("resources/music/endlessend.wav");
+	lose = new EffectSound("resources/music/lose.mp3");
+	start = new EffectSound("resources/music/start.wav");
+	click = new EffectSound("resources/music/click.wav");
+	
+	EffectSound miao = EffectSound("resources/music/miao.wav");
 	miao.play();
 }
 
@@ -153,12 +161,20 @@ void Game::run()
 	while(!quit){
 		scoll("resources/pic/bg/menu.png");
 		int op = welcome();
+		click->play();
 		ingame = true;
 		life.set(MAX_LIFE);
 		lightning.set(0);
 		score.set(0);
-		if(op == 1) normal();
-		else if(op == 2) endless();
+		comb = 0;
+		if(op == 1){
+			start->play();
+			normal();
+		}
+		else if(op == 2){
+			start->play();
+			endless();
+		}
 		else break;
 		ingame = false;
 	}
@@ -166,7 +182,6 @@ void Game::run()
 
 void Game::normal()
 {
-	lightning.increase();
 	//chapter 1
 	if(quit) return;
 	scoll("resources/pic/bg/normal1.png");
@@ -192,6 +207,7 @@ void Game::normal()
 	monsters[0].setStart(800, 100);
 	monsters[0].setEnd(20, 100);
 	monsters[0].setSpeed(4.0);
+	monsters[0].setLabelLen(8, 8);
 	monsters[1].setStart(800, 250);
 	monsters[1].setEnd(20, 250);
 	monsters[1].setSpeed(5.0);
@@ -199,12 +215,12 @@ void Game::normal()
 	monsters[2].setEnd(20, 400);
 	monsters[2].setSpeed(6.0);
 	if(stage()) return;
-	lightning.increase();
 	win_scene();
 	if(quit) return;
 	
 	//chapter 2
 	scoll("resources/pic/bg/normal2.png");
+	lightning.increase();
 	hero.setPosition(300, 240);
 	hero.setStatus(7);
 	//level 1
@@ -237,42 +253,44 @@ void Game::normal()
 	monsters[3].setEnd(300, 420);
 	monsters[3].setSpeed(6.0);
 	if(stage()) return;
-	lightning.increase();
 	win_scene();
 	
 	//chapter 3
 	scoll("resources/pic/bg/normal3.png");
+	lightning.increase();
+	score.setColor(WHITE);
 	hero.setPosition(350,450);
 	hero.setStatus(7);
 	//level 1
 	createMonster(1);
-	monsters[0].setStart(800,590);
+	monsters[0].setStart(800,500);
 	monsters[0].setEnd(450, 460);
 	monsters[0].setSpeed(4.0);
 	if(stage()) return;
 	//level 2
 	createMonster(3);
-	monsters[0].setStart(0, 580);
+	monsters[0].setStart(0, 500);
 	monsters[0].setEnd(300, 500);
 	monsters[0].setSpeed(3.0);
 	monsters[1].setStart(400, 0);
 	monsters[1].setEnd(400, 400);
 	monsters[1].setSpeed(6.0);
-	monsters[2].setStart(800,590);
+	monsters[2].setStart(800,520);
 	monsters[2].setEnd(450, 460);
 	monsters[2].setSpeed(4.0);
 	if(stage()) return;
 	//level3
 	createMonster(5);
-	monsters[0].setStart(0, 540);
+	monsters[0].setStart(0, 500);
 	monsters[0].setEnd(300, 500);
 	monsters[0].setSpeed(3.0);
 	monsters[1].setStart(400, 0);
 	monsters[1].setEnd(400, 400);
 	monsters[1].setSpeed(7.5);
-	monsters[2].setStart(800,580);
+	monsters[2].setStart(800,500);
 	monsters[2].setEnd(450, 460);
 	monsters[2].setSpeed(3.0);
+	monsters[2].setLabelLen(12, 12);
 	monsters[3].setStart(0,0);
 	monsters[3].setEnd(320,400);
 	monsters[3].setSpeed(6.0);
@@ -280,11 +298,12 @@ void Game::normal()
 	monsters[4].setEnd(410, 420);
 	monsters[4].setSpeed(6.0);
 	if(stage()) return;
-	lightning.increase();
 	win_scene();
 	
-	//chapter 4
+	//Chapter 4
 	scoll("resources/pic/bg/normal4.png");
+	lightning.increase();
+	score.setColor(WHITE);
 	hero.setPosition(0, 400);
 	hero.setStatus(7);
 	//level 1
@@ -294,32 +313,53 @@ void Game::normal()
 	monsters[0].setSpeed(10.0);
 	if(stage()) return;
 	//level 2
-	createMonster(2);
+	createMonster(4);
 	monsters[0].setStart(0, 0);
 	monsters[0].setEnd(20, 350);
-	monsters[0].setSpeed(8.0);
-	monsters[1].setStart(750, 560);
+	monsters[0].setSpeed(4.0);
+	monsters[1].setStart(750, 520);
 	monsters[1].setEnd(20, 420);
-	monsters[1].setSpeed(8.0);
+	monsters[1].setSpeed(4.0);
+	monsters[2].setStart(0, 0);
+	monsters[2].setEnd(20, 350);
+	monsters[2].setSpeed(8.0);
+	monsters[3].setStart(750, 520);
+	monsters[3].setEnd(20, 420);
+	monsters[3].setSpeed(8.0);
 	if(stage()) return;
 	//leve 3
-	createMonster(3);
+	createMonster(7);
 	monsters[0].setStart(0, 0);
 	monsters[0].setEnd(20, 350);
-	monsters[0].setSpeed(8.0);
-	monsters[1].setStart(750, 560);
+	monsters[0].setSpeed(4.0);
+	monsters[1].setStart(750, 520);
 	monsters[1].setEnd(20, 420);
-	monsters[1].setSpeed(8.0);
+	monsters[1].setSpeed(4.0);
+	monsters[1].setLabelLen(20, 20);
 	monsters[2].setStart(800, 0);
 	monsters[2].setEnd(20, 350);
-	monsters[2].setSpeed(10.0);
+	monsters[2].setSpeed(4.0);
+	monsters[3].setStart(0, 0);
+	monsters[3].setEnd(20, 350);
+	monsters[3].setSpeed(8.0);
+	monsters[4].setStart(750, 520);
+	monsters[4].setEnd(20, 420);
+	monsters[4].setSpeed(8.0);
+	monsters[5].setStart(800, 0);
+	monsters[5].setEnd(20, 350);
+	monsters[5].setSpeed(10.0);
+	monsters[6].setStart(530, 200);
+	monsters[6].setEnd(20, 350);
+	monsters[6].setSpeed(5.0);
+	
 	if(stage()) return;
-	lightning.increase();
 	win_scene();
 	if(quit) return;
 	
 	//chapter 5
 	scoll("resources/pic/bg/normal5.png");
+	lightning.increase();
+	score.setColor(BLACK);
 	hero.setPosition(0, 400);
 	hero.setStatus(7);
 	//level 1
@@ -369,9 +409,8 @@ void Game::normal()
 	monsters[7].setSpeed(4.0);
 	if(stage()) return;
 	
-	lightning.increase();
 	win_scene();
-	if(quit) return;
+	win2->play();
 }
 
 void Game::endless()
@@ -380,41 +419,45 @@ void Game::endless()
 	scoll("resources/pic/bg/endless1.png");
 	hero.setPosition(350, 240);
 	hero.setStatus(7);
+	int minlabel = 1,maxlabel = 2;
 	int monstercount = 1, stageNum = 0;
 	while (quit == false)
 	{
 		stageNum ++;
 		if((stageNum+1)%3==0)
 			monstercount += 1;
-		if(monstercount > 10) monstercount = 10;
+		if(monstercount > 8) monstercount = 8;
 		createMonster(monstercount);
 		double startx, starty;
 		for (int i = 0; i < monstercount; i++)
 		{
-			startx = rand() % 800;
-			starty = rand() % 600;
+			startx = rand() % 900 - 100;
+			starty = rand() % 700 - 100;
 			if (startx <180 && starty < 90) {
 				monsters[i].setStart(startx, starty);
 				monsters[i].setEnd(350, 250);
 				monsters[i].setSpeed(2.0);
+				monsters[i].setLabelLen(minlabel, maxlabel);
 			}
 			else if (startx > 520 && starty < 90) {
 				monsters[i].setStart(startx, starty);
 				monsters[i].setEnd(350, 250);
 				monsters[i].setSpeed(2.0);
+				monsters[i].setLabelLen(minlabel, maxlabel);
 			}
 			else if (startx < 180 && starty > 390) {
 				monsters[i].setStart(startx, starty);
 				monsters[i].setEnd(350, 420);
 				monsters[i].setSpeed(2.0);
+				monsters[i].setLabelLen(minlabel, maxlabel);
 			}
 			else if (startx > 520 && starty > 390) {
 				monsters[i].setStart(startx, starty);
 				monsters[i].setEnd(450, 320);
 				monsters[i].setSpeed(2.0);
+				monsters[i].setLabelLen(minlabel, maxlabel);
 			}
-			else
-			{	if(i>0)
+			else {
 				i--;
 			}
 		}
@@ -429,10 +472,15 @@ void Game::endless()
 		if (stageNum >= 20)
 			monsters[monstercount * 5/ 8].setSpeed(8.0);
 		
-		if(stage()) return;
+		if(stage()) break;
 		if(stageNum%3==0)
 			lightning.increase();
+		if(stageNum%4==0)
+			life.increase();
+		minlabel = stageNum/8+1;
+		maxlabel = stageNum/4+2;
 	}
+	if(!quit) endlessend->play();
 }
 
 void Game::guide()
@@ -486,10 +534,12 @@ int Game::stage()
 						mouse = false;
 						//printf("up: %d, %d\n", x, y);
 						if(x>=windowWidth-50 && y>=windowHeight-50){
+							click->play();
 							pause_scene();
 							break;
 						}
 						if(x>=windowWidth-100 && y>=windowHeight-50){
+							click->play();
 							q = true;
 							return 1;
 						}
@@ -500,11 +550,17 @@ int Game::stage()
 							lightning.decrease();
 						}
 						//cout<<t<<endl;
+						int hitnum = 0;
 						for(int i = 0; i < monster_number; i++)
 							if(monsters[i].isDead() == false){
-								monsters[i].deleteLabel(t);
+								hitnum += monsters[i].deleteLabel(t);
 								if(monsters[i].isDead()) score.add(100);
 							}
+						if(hitnum){
+							comb++;
+							score.add(hitnum * comb * 10);
+						}
+						else comb=0;
 						
 						//cout<<"life is "<<life.getLife()<<endl;
 						//cout<<"score is "<<score.getScore()<<endl;
@@ -546,8 +602,9 @@ void Game::lose_scene()
 		show();
 		SDL_Delay(30);
 	}
+	lose->play();
 	SDL_Rect rect = {0, 600, windowWidth, windowHeight};
-	for(int i = windowHeight; i >= 0; i -= 15){
+	for(int i = windowHeight; i >= 0; i -= 20){
 		rect.y = i;
 		show(losetex, &rect);
 		SDL_Delay(5);
@@ -557,6 +614,7 @@ void Game::lose_scene()
 
 void Game::win_scene()
 {
+	win1->play();
 	hero.setStatus(10);
 	for(int i=1;i<=50;i++){
 		show();
@@ -564,7 +622,7 @@ void Game::win_scene()
 	}
 	
 	SDL_Rect rect = {0, 600, windowWidth, windowHeight};
-	for(int i = windowHeight; i >= 0; i -= 15){
+	for(int i = windowHeight; i >= 0; i -= 20){
 		rect.y = i;
 		show(wintex, &rect);
 		SDL_Delay(5);
@@ -590,6 +648,7 @@ void Game::wait_for_click()
 					quit = true;
 					break;
 				case SDL_MOUSEBUTTONDOWN:
+					click->play();
 					q = true;
 					break;
 			}

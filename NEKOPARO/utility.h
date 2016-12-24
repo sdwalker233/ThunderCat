@@ -47,6 +47,7 @@ const int MAX_LIGHTNING = 3;
 #define blackPNG "resources/pic/black.png"
 
 const SDL_Color BLACK = {0, 0, 0, 80};
+const SDL_Color WHITE = {255, 255, 255, 80};
 /*
   shape&color
            0->white		'#ffffff'
