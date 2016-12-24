@@ -289,7 +289,7 @@ void Game::normal()
 	hero.setStatus(7);
 	//level 1
 	createMonster(1);
-	monsters[0].setStart(800, 100);
+	monsters[0].setStart(800, 0);
 	monsters[0].setEnd(20, 350);
 	monsters[0].setSpeed(10.0);
 	if(stage()) return;
@@ -310,7 +310,7 @@ void Game::normal()
 	monsters[1].setStart(750, 560);
 	monsters[1].setEnd(20, 420);
 	monsters[1].setSpeed(8.0);
-	monsters[2].setStart(800, 100);
+	monsters[2].setStart(800, 0);
 	monsters[2].setEnd(20, 350);
 	monsters[2].setSpeed(10.0);
 	if(stage()) return;
