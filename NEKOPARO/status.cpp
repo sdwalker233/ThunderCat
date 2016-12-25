@@ -125,7 +125,7 @@ Lightning::Lightning()
 {
 	num = 0;
 	lightningSurface1 = IMG_Load("resources/pic/lightning1.png");
-	//lightningSurface2 = IMG_Load("resources/pic/lightning2.png");
+	lightningSurface2 = IMG_Load("resources/pic/lightning2.png");
 	add = new EffectSound("resources/music/addlightning.wav");
 }
 
@@ -162,10 +162,10 @@ void Lightning::show()
 		rect.x += 50;
 		addSurface(lightningSurface1, &rect);
 	}
-	/*for(int i = num; i < MAX_LIGHTNING; i++){
+	for(int i = num; i < MAX_LIGHTNING; i++){
 		rect.x += 50;
 		addSurface(lightningSurface2, &rect);
-	}*/
+	}
 	finishSurface();
 }
 

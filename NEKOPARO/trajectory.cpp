@@ -45,11 +45,12 @@ void Trajectory::addPostion(SDL_Point point)
 		positions.push_back(tmp);
 	}
 	positions.push_back(point);
+	start_time = clock();
 }
 
 int Trajectory::recognize()
 {
-	start_time = clock();
+	//start_time = clock();
 	if(positions.size() < 10) return 0;
 	int max_x=0, max_y=0, min_x=1000, min_y=1000;
 	int max_x_pos=0, max_y_pos=0, min_x_pos=0, min_y_pos=0;

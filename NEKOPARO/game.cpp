@@ -14,6 +14,7 @@ Game::Game()
 	ren = SDL_CreateRenderer(win, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
 	if(ren == nullptr) ren = SDL_CreateRenderer(win, -1, SDL_RENDERER_SOFTWARE);
 	tra.setRender(ren);
+	guidetra.setRender(ren);
 	life.setRender(ren);
 	score.setRender(ren);
 	lightning.setRender(ren);
@@ -62,6 +63,21 @@ void Game::show(SDL_Texture *extra_tex = NULL, const SDL_Rect *extra_rect = &FUL
 		monsters[i].show();
 		SDL_RenderCopy(ren, monsters[i].getTexture(), NULL, &FULL_RECT);
 	}
+	if(guidemode){
+		SDL_Rect rect ={175, 100, 450, 150};
+		SDL_RenderCopy(ren, guidetext, NULL, &rect);
+		if(lastguide.x>=200&&lastguide.x<=600){
+			guidetra.addPostion(lastguide);
+			guidetra.show();
+			if(lastguide.x >= 580) guidetra.recognize();
+		}
+		SDL_RenderCopy(ren, guidetra.getTexture(), NULL, &FULL_RECT);
+		lastguide.x -= 8;
+		if(lastguide.x < 100){
+			guidetra.clear();
+			lastguide.x = 700;
+		}
+	}
 	hero.show();
 	SDL_RenderCopy(ren, hero.getTexture(), NULL, &FULL_RECT);
 	tra.show();
@@ -105,18 +121,17 @@ void Game::scoll(const string &bgName)
 
 int Game::welcome()
 {
-	SDL_Texture *roundmode,*endlessmode,*exit;
-	SDL_Surface *sur_roundmode = IMG_Load("resources/pic/roundmode.png"),
-	*sur_endlessmode = IMG_Load("resources/pic/endlessmode.png"),
-	*sur_exit = IMG_Load("resources/pic/exit.png");
-	roundmode = SDL_CreateTextureFromSurface(ren, sur_roundmode);
-	endlessmode = SDL_CreateTextureFromSurface(ren, sur_endlessmode);
-	exit = SDL_CreateTextureFromSurface(ren, sur_exit);
+	SDL_Texture *guidemode = IMG_LoadTexture(ren, "resources/pic/guidemode.png"),
+	*roundmode = IMG_LoadTexture(ren, "resources/pic/roundmode.png"),
+	*endlessmode = IMG_LoadTexture(ren, "resources/pic/endlessmode.png"),
+	*exit = IMG_LoadTexture(ren, "resources/pic/exit.png");
 	
+	SDL_Rect rect_guidemode = {527, 100, 187, 85};
 	SDL_Rect rect_roundmode = { 527,200,187,85 };
 	SDL_Rect rect_endlessmode = { 527,300,187,85 };
 	SDL_Rect rect_exit= { 527,400,187,85 };
 	SDL_RenderCopy(ren, bgTexture, NULL, &FULL_RECT);
+	SDL_RenderCopy(ren, guidemode, NULL, &rect_guidemode);
 	SDL_RenderCopy(ren, roundmode, NULL, &rect_roundmode);
 	SDL_RenderCopy(ren, endlessmode, NULL, &rect_endlessmode);
 	SDL_RenderCopy(ren, exit, NULL, &rect_exit);
@@ -130,6 +145,8 @@ int Game::welcome()
 					q = true;
 					break;
 				case SDL_MOUSEBUTTONDOWN:
+					if (event.button.x >= 527 && event.button.x <= 714 && event.button.y >= 100 && event.button.y <= 185)
+						return 0;
 					if (event.button.x >= 527 && event.button.x <= 714 && event.button.y >= 200 && event.button.y <= 285)
 						return 1;
 					if (event.button.x >= 527 && event.button.x <= 714 && event.button.y >= 300 && event.button.y <= 385)
@@ -167,7 +184,11 @@ void Game::run()
 		lightning.set(0);
 		score.set(0);
 		comb = 0;
-		if(op == 1){
+		if(op == 0){
+			//start->play();
+			guide();
+		}
+		else if(op == 1){
 			start->play();
 			normal();
 		}
@@ -180,39 +201,62 @@ void Game::run()
 	}
 }
 
+void Game::guide()
+{
+	scoll("resources/pic/bg/guide.png");
+	hero.setPosition(100, 250);
+	hero.setStatus(7);
+	createMonster(1);
+	monsters[0].setStart(600, 300);
+	monsters[0].setLabel("2");
+	monsters[0].setEnd(0, 200);
+	monsters[0].setSpeed(0);
+	guidemode = true;
+	guidetra.clear();
+	lastguide.x = 700;
+	lastguide.y = 480;
+	SDL_Surface *_sur = IMG_Load("resources/pic/bg/guidetext.png");
+	SDL_SetSurfaceBlendMode(_sur,SDL_BLENDMODE_BLEND);
+	SDL_SetSurfaceAlphaMod(_sur,150);
+	guidetext = SDL_CreateTextureFromSurface(ren, _sur);
+	SDL_FreeSurface(_sur);
+	if(!stage()) win_scene();
+	guidemode = false;
+}
+
 void Game::normal()
 {
 	//chapter 1
 	if(quit) return;
 	scoll("resources/pic/bg/normal1.png");
-	hero.setPosition(0, 400);
+	hero.setPosition(20, 350);
 	hero.setStatus(7);
 	//level 1
 	createMonster(1);
 	monsters[0].setStart(800, 100);
-	monsters[0].setEnd(20, 100);
+	monsters[0].setEnd(40, 100);
 	monsters[0].setSpeed(3.0);
 	if(stage()) return;
 	//level 2
 	createMonster(2);
 	monsters[0].setStart(800, 100);
-	monsters[0].setEnd(20, 100);
+	monsters[0].setEnd(40, 100);
 	monsters[0].setSpeed(4.0);
 	monsters[1].setStart(800, 300);
-	monsters[1].setEnd(20, 300);
+	monsters[1].setEnd(40, 300);
 	monsters[1].setSpeed(6.0);
 	if(stage()) return;
 	//leve 3
 	createMonster(3);
 	monsters[0].setStart(800, 100);
-	monsters[0].setEnd(20, 100);
+	monsters[0].setEnd(40, 100);
 	monsters[0].setSpeed(4.0);
 	monsters[0].setLabelLen(8, 8);
 	monsters[1].setStart(800, 250);
-	monsters[1].setEnd(20, 250);
+	monsters[1].setEnd(40, 250);
 	monsters[1].setSpeed(5.0);
 	monsters[2].setStart(800, 400);
-	monsters[2].setEnd(20, 400);
+	monsters[2].setEnd(40, 400);
 	monsters[2].setSpeed(6.0);
 	if(stage()) return;
 	win_scene();
@@ -221,36 +265,36 @@ void Game::normal()
 	//chapter 2
 	scoll("resources/pic/bg/normal2.png");
 	lightning.increase();
-	hero.setPosition(300, 240);
+	hero.setPosition(300, 216);
 	hero.setStatus(7);
 	//level 1
 	createMonster(1);
 	monsters[0].setStart(800, 0);
-	monsters[0].setEnd(300, 250);
+	monsters[0].setEnd(300, 230);
 	monsters[0].setSpeed(6.0);
 	if(stage()) return;
 	//level 2
 	createMonster(2);
 	monsters[0].setStart(0, 0);
-	monsters[0].setEnd(300, 250);
+	monsters[0].setEnd(300, 230);
 	monsters[0].setSpeed(5.0);
 	monsters[1].setStart(800, 600);
-	monsters[1].setEnd(400, 320);
+	monsters[1].setEnd(400, 300);
 	monsters[1].setSpeed(5.0);
 	if(stage()) return;
 	//level3
 	createMonster(4);
 	monsters[0].setStart(0, 0);
-	monsters[0].setEnd(300, 250);
+	monsters[0].setEnd(300, 230);
 	monsters[0].setSpeed(6.0);
 	monsters[1].setStart(800, 600);
-	monsters[1].setEnd(400, 320);
+	monsters[1].setEnd(400, 300);
 	monsters[1].setSpeed(5.0);
 	monsters[2].setStart(800, 0);
-	monsters[2].setEnd(300, 250);
+	monsters[2].setEnd(300, 230);
 	monsters[2].setSpeed(5.0);
 	monsters[3].setStart(0, 600);
-	monsters[3].setEnd(300, 420);
+	monsters[3].setEnd(300, 400);
 	monsters[3].setSpeed(6.0);
 	if(stage()) return;
 	win_scene();
@@ -483,11 +527,6 @@ void Game::endless()
 	if(!quit) endlessend->play();
 }
 
-void Game::guide()
-{
-	
-}
-
 int Game::stage()
 {
 	if(quit) return 1;
@@ -503,7 +542,7 @@ int Game::stage()
 				case SDL_QUIT:
 					q = true;
 					quit = true;
-					break;
+					return 1;
 				case SDL_MOUSEBUTTONDOWN:
 					x = event.button.x;
 					y = event.button.y;

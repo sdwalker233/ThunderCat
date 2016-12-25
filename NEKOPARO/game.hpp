@@ -21,7 +21,7 @@ private:
 	SDL_Window *win;
 	SDL_Renderer *ren;
 	SDL_Event event;
-	Trajectory tra;
+	Trajectory tra, guidetra;
 	Life life;
 	Score score;
 	Lightning lightning;
@@ -33,6 +33,9 @@ private:
 	bool quit;
 	EffectSound *die, *win1, *win2, *endlessend, *lose, *start, *click;
 	int comb;
+	bool guidemode;
+	SDL_Point lastguide;
+	SDL_Texture *guidetext;
 public:
 	Game();
 	~Game();

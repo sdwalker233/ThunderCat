@@ -45,6 +45,11 @@ void Monster::setLabelLen(int l, int r)
 	label=generateLabel(l, r);
 }
 
+void Monster::setLabel(const string &s)
+{
+	label = s;
+}
+
 void Monster::show()
 {
 	SDL_Rect rect;

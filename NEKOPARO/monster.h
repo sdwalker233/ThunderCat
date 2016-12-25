@@ -45,6 +45,7 @@ public:
 	bool isOut();
 	string generateLabel(int l, int r);
 	void setLabelLen(int l, int r);
+	void setLabel(const string& s);
 	//~Monster();
 };
 
