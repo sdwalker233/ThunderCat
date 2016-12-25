@@ -1,11 +1,3 @@
-//
-//  trajectory.hpp
-//  NEKOPARO
-//
-//  Created by shad0w_walker on 2016/12/12.
-//  Copyright © 2016年 GKP. All rights reserved.
-//
-
 #ifndef trajectory_hpp
 #define trajectory_hpp
 

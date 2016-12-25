@@ -1,11 +1,3 @@
-//
-//  utility.h
-//  NEKOPARO
-//
-//  Created by shad0w_walker on 2016/12/14.
-//  Copyright © 2016年 GKP. All rights reserved.
-//
-
 #ifndef utility_h
 #define utility_h
 
@@ -15,7 +7,7 @@
 #include <SDL2_ttf/SDL_ttf.h>
 #include <SDL2_mixer/SDL_mixer.h>
 #define ONE_SECOND 1000000
-#elif __UNIX__
+#elif __unix__
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_ttf.h>

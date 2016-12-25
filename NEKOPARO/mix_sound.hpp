@@ -1,11 +1,3 @@
-//
-//  Mix_Sound.hpp
-//  NEKOPARO
-//
-//  Created by shad0w_walker on 2016/12/14.
-//  Copyright © 2016年 GKP. All rights reserved.
-//
-
 #ifndef mix_sound_hpp
 #define mix_sound_hpp
 

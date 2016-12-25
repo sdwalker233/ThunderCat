@@ -1,11 +1,3 @@
-//
-//  hero.cpp
-//  NEKOPARO
-//
-//  Created by shad0w_walker on 2016/12/20.
-//  Copyright © 2016年 GKP. All rights reserved.
-//
-
 #include "hero.hpp"
 
 Hero::Hero()

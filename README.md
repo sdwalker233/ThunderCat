@@ -1,29 +1,10 @@
 # NEKOPARO
-A GAME WITH SDL2.
-#### To do list
+A SIMPLE GAME WITH **SDL2**.  
+You can play it on any platform (Windows or MacOS or Linux).
 
- ~~1 中间主人公~~  
-
- ~~2 到达终点以及退出画面|析构~~  
-
- 3 换素材、背景  
-
- ~~4 关卡~~  
-
- ~~5 开始画面~~  
-
- ~~6 死亡画面、胜利画面（gameover|主人公变化）~~  
-
- ~~7 怪左右移动~~
-
- ~~8 轨迹显示优化~~
-
- 9 添加声音
-
- ~~10 闪电~~  
-
- ~~11 过场动画~~
-
- 12 guide
-
- 13 关卡模式增强
+###Compile
+```
+g++ -O3 -std=c++11 NEKOPARO/*.cpp -INEKOPARO/ -lSDL2 -lSDL2_ttf -lSDL2_mixer -lSDL2_image -o NEKOPARO/nekoparo
+NEKOPARO/nekoparo
+```
+Also you can open with VS or Xcode, just add SDL2, SDL2_image, SDL2_TTF, SDL2_mixer.

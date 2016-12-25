@@ -1,11 +1,3 @@
-//
-//  hero.hpp
-//  NEKOPARO
-//
-//  Created by shad0w_walker on 2016/12/20.
-//  Copyright © 2016年 GKP. All rights reserved.
-//
-
 #ifndef hero_hpp
 #define hero_hpp
 

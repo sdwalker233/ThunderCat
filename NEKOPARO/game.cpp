@@ -1,10 +1,3 @@
-//
-//  game.cpp
-//  SDL_game
-//
-//  Created by shad0w_walker on 2016/12/14.
-//  Copyright © 2016年 GKP. All rights reserved.
-//
 #include "game.hpp"
 
 Game::Game()
@@ -41,6 +34,9 @@ Game::Game()
 	lose = new EffectSound("resources/music/lose.mp3");
 	start = new EffectSound("resources/music/start.wav");
 	click = new EffectSound("resources/music/click.wav");
+	menubgm = new MusicSound("resources/music/menubgm.mp3");
+	normalbgm = new MusicSound("resources/music/normalbgm.mp3");
+	endlessbgm = new MusicSound("resources/music/endlessbgm.mp3");
 	
 	EffectSound miao = EffectSound("resources/music/miao.wav");
 	miao.play();
@@ -177,6 +173,7 @@ void Game::run()
 {
 	while(!quit){
 		scoll("resources/pic/bg/menu.png");
+		menubgm->play();
 		int op = welcome();
 		click->play();
 		ingame = true;
@@ -184,8 +181,9 @@ void Game::run()
 		lightning.set(0);
 		score.set(0);
 		comb = 0;
+		menubgm->stop();
 		if(op == 0){
-			//start->play();
+			start->play();
 			guide();
 		}
 		else if(op == 1){
@@ -225,10 +223,11 @@ void Game::guide()
 }
 
 void Game::normal()
-{
-	//chapter 1
+{	
 	if(quit) return;
 	scoll("resources/pic/bg/normal1.png");
+	normalbgm->play();
+	//chapter 1
 	hero.setPosition(20, 350);
 	hero.setStatus(7);
 	//level 1
@@ -454,6 +453,7 @@ void Game::normal()
 	if(stage()) return;
 	
 	win_scene();
+	normalbgm->stop();
 	win2->play();
 }
 
@@ -461,6 +461,7 @@ void Game::endless()
 {
 	// endless model
 	scoll("resources/pic/bg/endless1.png");
+	endlessbgm->play();
 	hero.setPosition(350, 240);
 	hero.setStatus(7);
 	int minlabel = 1,maxlabel = 2;
@@ -524,6 +525,7 @@ void Game::endless()
 		minlabel = stageNum/8+1;
 		maxlabel = stageNum/4+2;
 	}
+	endlessbgm->stop();
 	if(!quit) endlessend->play();
 }
 
@@ -641,6 +643,8 @@ void Game::lose_scene()
 		show();
 		SDL_Delay(30);
 	}
+	normalbgm->stop();
+	endlessbgm->stop();
 	lose->play();
 	SDL_Rect rect = {0, 600, windowWidth, windowHeight};
 	for(int i = windowHeight; i >= 0; i -= 20){

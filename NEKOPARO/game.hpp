@@ -1,11 +1,4 @@
 //
-//  game.hpp
-//  NEKOPARO
-//
-//  Created by shad0w_walker on 2016/12/14.
-//  Copyright © 2016年 GKP. All rights reserved.
-//
-
 #ifndef game_hpp
 #define game_hpp
 
@@ -32,6 +25,7 @@ private:
 	bool ingame;
 	bool quit;
 	EffectSound *die, *win1, *win2, *endlessend, *lose, *start, *click;
+	MusicSound *menubgm, *normalbgm, *endlessbgm;
 	int comb;
 	bool guidemode;
 	SDL_Point lastguide;
