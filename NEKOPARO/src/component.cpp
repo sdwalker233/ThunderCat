@@ -31,11 +31,16 @@ void Component::addSurface(SDL_Surface *_sur, SDL_Rect *_rect)
 
 void Component::finishSurface()
 {
-	if(tex != NULL) SDL_DestroyTexture(tex);
+	clearTexture();
 	tex = SDL_CreateTextureFromSurface(ren, sur);
 }
 
 void Component::setVisible(bool _visible)
 {
 	visible = _visible;
+}
+
+void Component::clearTexture()
+{
+	if(tex != NULL) SDL_DestroyTexture(tex);
 }

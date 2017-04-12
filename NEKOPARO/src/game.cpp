@@ -22,7 +22,11 @@ Game::Game()
 	SDL_FreeSurface(pausesur);
 	wintex = IMG_LoadTexture(ren, "resources/pic/win.png");
 	losetex = IMG_LoadTexture(ren, "resources/pic/lose.png");
-	
+	/*for(int i=1;i<=6;i++){
+		char filename[30];
+		sprintf(filename, "resources/pic/story/%d.jpg", i);
+		storytex[i] = IMG_LoadTexture(ren, filename);
+	}*/
 	
 	ingame = false;
 	quit = false;
@@ -95,8 +99,7 @@ void Game::show(SDL_Texture *extra_tex = NULL, const SDL_Rect *extra_rect = &FUL
 void Game::scoll(const string &bgName)
 {
 	SDL_Texture *last_bg = bgTexture;
-	SDL_Surface *bgSurface = IMG_Load(bgName.c_str());
-	bgTexture = SDL_CreateTextureFromSurface(ren, bgSurface);
+	bgTexture = IMG_LoadTexture(ren, bgName.c_str());
 	SDL_Rect rect = {0, 0, windowWidth, windowHeight};
 	for(int i = windowWidth; i >= 0; i -= 7){
 		//SDL_RenderClear(ren);
@@ -181,6 +184,7 @@ void Game::run()
 		lightning.set(0);
 		score.set(0);
 		comb = 0;
+		tra.clear();
 		menubgm->stop();
 		if(op == 0){
 			start->play();
@@ -220,14 +224,38 @@ void Game::guide()
 	SDL_FreeSurface(_sur);
 	if(!stage()) win_scene();
 	guidemode = false;
+	guidetra.clear();
 }
 
 void Game::normal()
 {	
 	if(quit) return;
-	scoll("resources/pic/bg/normal1.png");
 	normalbgm->play();
+	scoll("resources/pic/story/1.jpg");
+	//wait_for_click();
+	scoll("resources/pic/story/2.jpg");
+	//wait_for_click();
+	scoll("resources/pic/story/3.jpg");
+	//wait_for_click();
+	scoll("resources/pic/story/4.jpg");
+	//wait_for_click();
+	scoll("resources/pic/story/5.jpg");
+	//wait_for_click();
+	
+	//wait_for_click();
+	/*
+	 story_scene(1);
+	story_scene(2);
+	story_scene(3);
+	story_scene(4);
+	story_scene(5);
+	story_scene(6);
+	 */
+	
+	scoll("resources/pic/bg/normal1.png");
+	
 	//chapter 1
+	
 	hero.setPosition(20, 350);
 	hero.setStatus(7);
 	//level 1
@@ -379,6 +407,7 @@ void Game::normal()
 	monsters[1].setEnd(20, 420);
 	monsters[1].setSpeed(4.0);
 	monsters[1].setLabelLen(20, 20);
+	//monsters[1].setPic(21);
 	monsters[2].setStart(800, 0);
 	monsters[2].setEnd(20, 350);
 	monsters[2].setSpeed(4.0);
@@ -453,8 +482,10 @@ void Game::normal()
 	if(stage()) return;
 	
 	win_scene();
-	normalbgm->stop();
 	win2->play();
+	scoll("resources/pic/story/6.jpg");
+	wait_for_click();
+	normalbgm->stop();
 }
 
 void Game::endless()
@@ -673,6 +704,25 @@ void Game::win_scene()
 	wait_for_click();
 	hero.setStatus(0);
 }
+
+/*void Game::story_scene(int num)
+{
+	//win1->play();
+	//hero.setStatus(10);
+	for(int i=1;i<=50;i++){
+		show();
+		SDL_Delay(30);
+	}
+	
+	SDL_Rect rect = {0, 600, windowWidth, windowHeight};
+	for(int i = windowHeight; i >= 0; i -= 20){
+		rect.y = i;
+		show(storytex[num], &rect);
+		SDL_Delay(5);
+	}
+	wait_for_click();
+	hero.setStatus(0);
+}*/
 
 void Game::pause_scene()
 {

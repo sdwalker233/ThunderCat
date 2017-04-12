@@ -18,6 +18,7 @@ public:
 	void addSurface(SDL_Surface* _sur, SDL_Rect* _rect);
 	void finishSurface();
 	void setVisible(bool _visible);
+	void clearTexture();
 };
 
 #endif /* component_hpp */

@@ -40,6 +40,14 @@ Monster::Monster()
 	isout = false;
 }
 
+void Monster::setPic(int x)
+{
+	SDL_FreeSurface(monstersurface);
+	char filename[50];
+	sprintf(filename, "resources/pic/monster/%d.png", x);
+	monstersurface= IMG_Load(filename);
+}
+
 void Monster::setLabelLen(int l, int r)
 {
 	label=generateLabel(l, r);

@@ -21,7 +21,7 @@ private:
 	vector<Monster> monsters;
 	Hero hero;
 	int monster_number;
-	SDL_Texture *bgTexture, *pausebotton, *restartbotton, *pausetex, *wintex, *losetex;
+	SDL_Texture *bgTexture, *pausebotton, *restartbotton, *pausetex, *wintex, *losetex, *storytex[7];
 	bool ingame;
 	bool quit;
 	EffectSound *die, *win1, *win2, *endlessend, *lose, *start, *click;
@@ -44,6 +44,7 @@ public:
 	void endless();
 	void lose_scene();
 	void win_scene();
+	//void story_scene(int num);
 	void pause_scene();
 	void wait_for_click();
 	void guide();

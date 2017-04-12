@@ -17,6 +17,7 @@ Trajectory::Trajectory()
 void Trajectory::clear()
 {
 	positions.clear();
+	clearTexture();
 	shape = 0;
 	setVisible(true);
 	start_time = 0;
