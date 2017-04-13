@@ -30,8 +30,8 @@ void Hero::setStatus(int s)
 
 void Hero::show()
 {
-	if(clock() - last_time<ONE_SECOND/8) return;
-	last_time = clock();
+	if(SDL_GetTicks() - last_time<ONE_SECOND/5) return;
+	last_time = SDL_GetTicks();
 	clearSurface();
 	//cout<<staus<<" "<<p<<endl;
 	addSurface(heroSurface[staus][p++], &position);

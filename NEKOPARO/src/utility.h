@@ -6,26 +6,27 @@
 #include <SDL2_image/SDL_image.h>
 #include <SDL2_ttf/SDL_ttf.h>
 #include <SDL2_mixer/SDL_mixer.h>
-#define ONE_SECOND 1000000
+//#define ONE_SECOND 1000000
 #elif __unix__
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_ttf.h>
 #include <SDL2/SDL_mixer.h>
-#define ONE_SECOND 1000000
+//#define ONE_SECOND 1000000
 #else
 #include <SDL.h>
 #include <SDL_image.h>
 #include <SDL_ttf.h>
 #include <SDL_mixer.h>
-#define ONE_SECOND 1000
+//#define ONE_SECOND 1000
 #endif
 #include <iostream>
 #include <sstream>
 #include <cmath>
 #include <string>
 #include <vector>
-#include <ctime>
+
+#define ONE_SECOND 1000
 using namespace std;
 
 const int windowWidth = 800;

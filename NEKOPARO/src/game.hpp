@@ -36,7 +36,7 @@ public:
 	void run();
 	int stage();
 	void defaultRender();
-	void show(SDL_Texture *extra_tex, const SDL_Rect *extra_rect);
+	void show(SDL_Texture *extra_tex, const SDL_Rect *extra_rect, bool only_extra, bool refresh);
 	int welcome();
 	void createMonster(int m_number);
 	void scoll(const string& bgName);
@@ -44,7 +44,8 @@ public:
 	void endless();
 	void lose_scene();
 	void win_scene();
-	//void story_scene(int num);
+	void story_scene(int num);
+	void op();
 	void pause_scene();
 	void wait_for_click();
 	void guide();

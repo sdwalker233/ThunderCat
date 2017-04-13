@@ -38,7 +38,7 @@ void Trajectory::addPostion(SDL_Point point)
 		positions.push_back(tmp);
 	}
 	positions.push_back(point);
-	start_time = clock();
+	start_time = SDL_GetTicks();
 }
 
 int Trajectory::recognize()
@@ -142,7 +142,7 @@ void Trajectory::clearSurface()
 
 void Trajectory::show()
 {
-	if(start_time > 0 && clock() - start_time>ONE_SECOND)
+	if(start_time > 0 && SDL_GetTicks() - start_time>ONE_SECOND)
 		setVisible(false);
 	if(positions.size() < 5) return;
 	SDL_Rect rect = {0, 0, dotsize, dotsize};
@@ -164,8 +164,7 @@ void Trajectory::show()
 
 SDL_Texture* Trajectory::getTexture()
 {
-	
-	if(start_time > 0 && clock() - start_time>ONE_SECOND)
+	if(start_time > 0 && SDL_GetTicks() - start_time>ONE_SECOND)
 		setVisible(false);
 	if(visible)	return tex;
 	else return nullptr;

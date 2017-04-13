@@ -3,7 +3,7 @@
 Game::Game()
 {
 	srand( (unsigned)time( NULL ) );
-	win = SDL_CreateWindow("NEKOPARO", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, windowWidth, windowHeight, SDL_WINDOW_SHOWN);
+	win = SDL_CreateWindow("Thunder Cat", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, windowWidth, windowHeight, SDL_WINDOW_SHOWN);
 	ren = SDL_CreateRenderer(win, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
 	if(ren == nullptr) ren = SDL_CreateRenderer(win, -1, SDL_RENDERER_SOFTWARE);
 	tra.setRender(ren);
@@ -22,11 +22,6 @@ Game::Game()
 	SDL_FreeSurface(pausesur);
 	wintex = IMG_LoadTexture(ren, "resources/pic/win.png");
 	losetex = IMG_LoadTexture(ren, "resources/pic/lose.png");
-	/*for(int i=1;i<=6;i++){
-		char filename[30];
-		sprintf(filename, "resources/pic/story/%d.jpg", i);
-		storytex[i] = IMG_LoadTexture(ren, filename);
-	}*/
 	
 	ingame = false;
 	quit = false;
@@ -52,45 +47,49 @@ Game::~Game()
 	SDL_DestroyWindow(win);
 }
 
-void Game::show(SDL_Texture *extra_tex = NULL, const SDL_Rect *extra_rect = &FULL_RECT)
+void Game::show(SDL_Texture *extra_tex = NULL, const SDL_Rect *extra_rect = &FULL_RECT, bool only_extra = false, bool refresh = true)
 {
 	SDL_RenderClear(ren);
-	SDL_RenderCopy(ren, bgTexture, NULL, &FULL_RECT);
-	life.show();
-	SDL_RenderCopy(ren, life.getTexture(), NULL, &FULL_RECT);
-	for(int i = 0; i < monster_number; i++){
-		if(life.getLife()) monsters[i].move();
-		monsters[i].show();
-		SDL_RenderCopy(ren, monsters[i].getTexture(), NULL, &FULL_RECT);
-	}
-	if(guidemode){
-		SDL_Rect rect ={175, 100, 450, 150};
-		SDL_RenderCopy(ren, guidetext, NULL, &rect);
-		if(lastguide.x>=200&&lastguide.x<=600){
-			guidetra.addPostion(lastguide);
-			guidetra.show();
-			if(lastguide.x >= 580) guidetra.recognize();
+	if(!only_extra){
+		SDL_RenderCopy(ren, bgTexture, NULL, &FULL_RECT);
+		life.show();
+		SDL_RenderCopy(ren, life.getTexture(), NULL, &FULL_RECT);
+		for(int i = 0; i < monster_number; i++){
+			if(life.getLife()) monsters[i].move();
+			monsters[i].show();
+			SDL_RenderCopy(ren, monsters[i].getTexture(), NULL, &FULL_RECT);
 		}
-		SDL_RenderCopy(ren, guidetra.getTexture(), NULL, &FULL_RECT);
-		lastguide.x -= 8;
-		if(lastguide.x < 100){
-			guidetra.clear();
-			lastguide.x = 700;
+		if(guidemode){
+			SDL_Rect rect ={175, 100, 450, 150};
+			SDL_RenderCopy(ren, guidetext, NULL, &rect);
+			if(lastguide.x>=200&&lastguide.x<=600){
+				guidetra.addPostion(lastguide);
+				guidetra.show();
+				if(lastguide.x >= 580) guidetra.recognize();
+			}
+			SDL_RenderCopy(ren, guidetra.getTexture(), NULL, &FULL_RECT);
+			lastguide.x -= 8;
+			if(lastguide.x < 100){
+				guidetra.clear();
+				lastguide.x = 700;
+			}
 		}
-	}
-	hero.show();
-	SDL_RenderCopy(ren, hero.getTexture(), NULL, &FULL_RECT);
-	tra.show();
-	SDL_RenderCopy(ren, tra.getTexture(), NULL, &FULL_RECT);
-	lightning.show();
-	SDL_RenderCopy(ren, lightning.getTexture(), NULL, &FULL_RECT);
-	score.show();
-	SDL_RenderCopy(ren, score.getTexture(), NULL, &FULL_RECT);
-	if(ingame){
-		SDL_Rect rect = {windowWidth-50, windowHeight-50, 50, 50};
-		SDL_RenderCopy(ren, pausebotton, NULL, &rect);
-		rect.x-=50;
-		SDL_RenderCopy(ren, restartbotton, NULL, &rect);
+		if(refresh){
+			hero.show();
+			tra.show();
+			lightning.show();
+			score.show();
+		}
+		SDL_RenderCopy(ren, hero.getTexture(), NULL, &FULL_RECT);
+		SDL_RenderCopy(ren, tra.getTexture(), NULL, &FULL_RECT);
+		SDL_RenderCopy(ren, lightning.getTexture(), NULL, &FULL_RECT);
+		SDL_RenderCopy(ren, score.getTexture(), NULL, &FULL_RECT);
+		if(ingame){
+			SDL_Rect rect = {windowWidth-50, windowHeight-50, 50, 50};
+			SDL_RenderCopy(ren, pausebotton, NULL, &rect);
+			rect.x-=50;
+			SDL_RenderCopy(ren, restartbotton, NULL, &rect);
+		}
 	}
 	SDL_RenderCopy(ren, extra_tex, NULL, extra_rect);
 	SDL_RenderPresent(ren);
@@ -101,7 +100,7 @@ void Game::scoll(const string &bgName)
 	SDL_Texture *last_bg = bgTexture;
 	bgTexture = IMG_LoadTexture(ren, bgName.c_str());
 	SDL_Rect rect = {0, 0, windowWidth, windowHeight};
-	for(int i = windowWidth; i >= 0; i -= 7){
+	for(int i = windowWidth; i >= 0; i -= 10){
 		//SDL_RenderClear(ren);
 		SDL_RenderCopy(ren, last_bg, NULL, &FULL_RECT);
 		rect.x = i;
@@ -175,7 +174,7 @@ void Game::createMonster(int m_number)
 void Game::run()
 {
 	while(!quit){
-		scoll("resources/pic/bg/menu.png");
+		scoll("resources/pic/bg/menu.jpg");
 		menubgm->play();
 		int op = welcome();
 		click->play();
@@ -184,7 +183,6 @@ void Game::run()
 		lightning.set(0);
 		score.set(0);
 		comb = 0;
-		tra.clear();
 		menubgm->stop();
 		if(op == 0){
 			start->play();
@@ -199,6 +197,7 @@ void Game::run()
 			endless();
 		}
 		else break;
+		tra.clear();
 		ingame = false;
 	}
 }
@@ -222,35 +221,27 @@ void Game::guide()
 	SDL_SetSurfaceAlphaMod(_sur,150);
 	guidetext = SDL_CreateTextureFromSurface(ren, _sur);
 	SDL_FreeSurface(_sur);
-	if(!stage()) win_scene();
-	guidemode = false;
-	guidetra.clear();
+	if(!stage()){
+		guidetra.clear();
+		guidetra.setVisible(false);
+		guidemode = false;
+		win_scene();
+	}
 }
 
 void Game::normal()
 {	
 	if(quit) return;
 	normalbgm->play();
-	scoll("resources/pic/story/1.jpg");
-	//wait_for_click();
-	scoll("resources/pic/story/2.jpg");
-	//wait_for_click();
-	scoll("resources/pic/story/3.jpg");
-	//wait_for_click();
-	scoll("resources/pic/story/4.jpg");
-	//wait_for_click();
-	scoll("resources/pic/story/5.jpg");
-	//wait_for_click();
-	
-	//wait_for_click();
-	/*
-	 story_scene(1);
+	story_scene(1);
 	story_scene(2);
 	story_scene(3);
 	story_scene(4);
 	story_scene(5);
 	story_scene(6);
-	 */
+	story_scene(7);
+	//op();
+	story_scene(8);
 	
 	scoll("resources/pic/bg/normal1.png");
 	
@@ -290,6 +281,8 @@ void Game::normal()
 	if(quit) return;
 	
 	//chapter 2
+	story_scene(9);
+	story_scene(10);
 	scoll("resources/pic/bg/normal2.png");
 	lightning.increase();
 	hero.setPosition(300, 216);
@@ -327,6 +320,7 @@ void Game::normal()
 	win_scene();
 	
 	//chapter 3
+	story_scene(11);
 	scoll("resources/pic/bg/normal3.png");
 	lightning.increase();
 	score.setColor(WHITE);
@@ -372,6 +366,7 @@ void Game::normal()
 	win_scene();
 	
 	//Chapter 4
+	story_scene(12);
 	scoll("resources/pic/bg/normal4.png");
 	lightning.increase();
 	score.setColor(WHITE);
@@ -429,6 +424,7 @@ void Game::normal()
 	if(quit) return;
 	
 	//chapter 5
+	story_scene(13);
 	scoll("resources/pic/bg/normal5.png");
 	lightning.increase();
 	score.setColor(BLACK);
@@ -483,7 +479,8 @@ void Game::normal()
 	
 	win_scene();
 	win2->play();
-	scoll("resources/pic/story/6.jpg");
+	story_scene(14);
+	story_scene(15);
 	wait_for_click();
 	normalbgm->stop();
 }
@@ -523,7 +520,7 @@ void Game::endless()
 			}
 			else if (startx < 180 && starty > 390) {
 				monsters[i].setStart(startx, starty);
-				monsters[i].setEnd(350, 420);
+				monsters[i].setEnd(320, 400);
 				monsters[i].setSpeed(2.0);
 				monsters[i].setLabelLen(minlabel, maxlabel);
 			}
@@ -563,7 +560,7 @@ void Game::endless()
 int Game::stage()
 {
 	if(quit) return 1;
-	const Uint32 FPS=1000/20;//30 is fps
+	const Uint32 FPS=1000/30;//30 is fps
 	Uint32 _FPS_Timer = 0;
 	bool mouse = false;
 	SDL_Point pos;
@@ -670,17 +667,17 @@ void Game::lose_scene()
 {
 	hero.setStatus(8);
 	die->play();
-	for(int i=1;i<=40;i++){
+	for(int i=1;i<=30;i++){
 		show();
-		SDL_Delay(30);
+		SDL_Delay(40);
 	}
 	normalbgm->stop();
 	endlessbgm->stop();
 	lose->play();
 	SDL_Rect rect = {0, 600, windowWidth, windowHeight};
-	for(int i = windowHeight; i >= 0; i -= 20){
+	for(int i = windowHeight; i >= 0; i -= 10){
 		rect.y = i;
-		show(losetex, &rect);
+		show(losetex, &rect, false, false);
 		SDL_Delay(5);
 	}
 	wait_for_click();
@@ -690,39 +687,51 @@ void Game::win_scene()
 {
 	win1->play();
 	hero.setStatus(10);
-	for(int i=1;i<=50;i++){
+	for(int i=1;i<=40;i++){
 		show();
-		SDL_Delay(30);
+		SDL_Delay(40);
 	}
 	
 	SDL_Rect rect = {0, 600, windowWidth, windowHeight};
-	for(int i = windowHeight; i >= 0; i -= 20){
+	for(int i = windowHeight; i >= 0; i -= 10){
 		rect.y = i;
-		show(wintex, &rect);
+		show(wintex, &rect, false, false);
 		SDL_Delay(5);
 	}
 	wait_for_click();
 	hero.setStatus(0);
 }
 
-/*void Game::story_scene(int num)
+void Game::story_scene(int num)
 {
-	//win1->play();
-	//hero.setStatus(10);
-	for(int i=1;i<=50;i++){
-		show();
+	char filename[30];
+	sprintf(filename, "resources/pic/story/%d.png", num);
+	SDL_Texture* tex = IMG_LoadTexture(ren, filename);
+	SDL_SetTextureBlendMode(tex, SDL_BLENDMODE_BLEND);
+	SDL_Rect rect = {0, 0, windowWidth, windowHeight};
+	show(tex, &rect);
+	wait_for_click();
+	for(int i = 255; i >= 0; i -=5){
+		SDL_SetTextureAlphaMod(tex, i);
+		show(tex, &rect, true);
 		SDL_Delay(30);
 	}
-	
-	SDL_Rect rect = {0, 600, windowWidth, windowHeight};
-	for(int i = windowHeight; i >= 0; i -= 20){
-		rect.y = i;
-		show(storytex[num], &rect);
-		SDL_Delay(5);
-	}
+	SDL_DestroyTexture(tex);
+}
+
+void Game::op()
+{
+	SDL_Texture* tex = IMG_LoadTexture(ren, "resources/pic/story/op.jpg");
+	SDL_Rect rect = {0, 0, windowWidth, 4552};
+	show(tex, &rect);
 	wait_for_click();
-	hero.setStatus(0);
-}*/
+	for(int i = 0; i <=3952; i +=2){
+		rect.y=-i;
+		show(tex, &rect, true);
+		SDL_Delay(30);
+	}
+	SDL_DestroyTexture(tex);
+}
 
 void Game::pause_scene()
 {
