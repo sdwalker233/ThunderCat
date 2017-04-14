@@ -22,8 +22,15 @@ Game::Game()
 	SDL_FreeSurface(pausesur);
 	wintex = IMG_LoadTexture(ren, "resources/pic/win.png");
 	losetex = IMG_LoadTexture(ren, "resources/pic/lose.png");
+	SDL_Surface *_sur = IMG_Load("resources/pic/bg/guidetext.png");
+	SDL_SetSurfaceBlendMode(_sur,SDL_BLENDMODE_BLEND);
+	SDL_SetSurfaceAlphaMod(_sur,150);
+	guidetext = SDL_CreateTextureFromSurface(ren, _sur);
+	SDL_FreeSurface(_sur);
 	
+	monster_number = 0;
 	ingame = false;
+	guidemode = false;
 	quit = false;
 	
 	die = new EffectSound("resources/music/die.wav");
@@ -216,17 +223,11 @@ void Game::guide()
 	guidetra.clear();
 	lastguide.x = 700;
 	lastguide.y = 480;
-	SDL_Surface *_sur = IMG_Load("resources/pic/bg/guidetext.png");
-	SDL_SetSurfaceBlendMode(_sur,SDL_BLENDMODE_BLEND);
-	SDL_SetSurfaceAlphaMod(_sur,150);
-	guidetext = SDL_CreateTextureFromSurface(ren, _sur);
-	SDL_FreeSurface(_sur);
-	if(!stage()){
-		guidetra.clear();
-		guidetra.setVisible(false);
-		guidemode = false;
-		win_scene();
-	}
+	int res = stage();
+	guidetra.clear();
+	guidetra.setVisible(false);
+	guidemode = false;
+	if(!res) win_scene();
 }
 
 void Game::normal()
@@ -514,13 +515,13 @@ void Game::endless()
 			}
 			else if (startx > 520 && starty < 90) {
 				monsters[i].setStart(startx, starty);
-				monsters[i].setEnd(350, 250);
+				monsters[i].setEnd(370, 240);
 				monsters[i].setSpeed(2.0);
 				monsters[i].setLabelLen(minlabel, maxlabel);
 			}
 			else if (startx < 180 && starty > 390) {
 				monsters[i].setStart(startx, starty);
-				monsters[i].setEnd(320, 400);
+				monsters[i].setEnd(300, 450);
 				monsters[i].setSpeed(2.0);
 				monsters[i].setLabelLen(minlabel, maxlabel);
 			}
@@ -560,7 +561,7 @@ void Game::endless()
 int Game::stage()
 {
 	if(quit) return 1;
-	const Uint32 FPS=1000/30;//30 is fps
+	const Uint32 FPS=1000/60;//30 is fps
 	Uint32 _FPS_Timer = 0;
 	bool mouse = false;
 	SDL_Point pos;
@@ -667,9 +668,9 @@ void Game::lose_scene()
 {
 	hero.setStatus(8);
 	die->play();
-	for(int i=1;i<=30;i++){
+	for(int i=1;i<=80;i++){
 		show();
-		SDL_Delay(40);
+		SDL_Delay(5);
 	}
 	normalbgm->stop();
 	endlessbgm->stop();
@@ -687,9 +688,9 @@ void Game::win_scene()
 {
 	win1->play();
 	hero.setStatus(10);
-	for(int i=1;i<=40;i++){
+	for(int i=1;i<=80;i++){
 		show();
-		SDL_Delay(40);
+		SDL_Delay(5);
 	}
 	
 	SDL_Rect rect = {0, 600, windowWidth, windowHeight};

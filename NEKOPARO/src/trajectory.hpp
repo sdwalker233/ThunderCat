@@ -11,7 +11,7 @@ private:
 	vector<SDL_Point> positions;
 	int shape;
 	EffectSound *du, *lightning;
-	clock_t start_time;
+	Uint32 start_time;
 	int lasti, lastshape;
 public:
 	Trajectory();

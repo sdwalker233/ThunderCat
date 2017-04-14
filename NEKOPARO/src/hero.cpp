@@ -3,7 +3,7 @@
 Hero::Hero()
 {
 	char filename[50];
-	staus = 0;
+	staus = p = 0;
 	last_time = 0;
 	len[0] = 8;len[1] = 0;len[2] = 4;len[3] = 5;
 	len[4] = 4;len[5] = 4;len[6] = 4;len[7] = 6;

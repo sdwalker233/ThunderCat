@@ -21,7 +21,7 @@ private:
 	vector<Monster> monsters;
 	Hero hero;
 	int monster_number;
-	SDL_Texture *bgTexture, *pausebotton, *restartbotton, *pausetex, *wintex, *losetex, *storytex[7];
+	SDL_Texture *bgTexture, *pausebotton, *restartbotton, *pausetex, *wintex, *losetex;
 	bool ingame;
 	bool quit;
 	EffectSound *die, *win1, *win2, *endlessend, *lose, *start, *click;

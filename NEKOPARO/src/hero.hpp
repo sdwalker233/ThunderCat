@@ -10,7 +10,7 @@ private:
 	int staus, p;
 	SDL_Surface* heroSurface[15][12];
 	int len[15];
-	clock_t last_time;
+	Uint32 last_time;
 	SDL_Rect position;
 	// 正常 0
 	// - 2
