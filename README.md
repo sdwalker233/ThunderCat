@@ -15,7 +15,7 @@ Also you can open with VS or Xcode, just add [SDL2](https://www.libsdl.org/downl
 
 Downloads
 ---
-* [__Download page__](https://github.com/shad0w-walker233/ThunderCat/releases/tag/v1.0)
+* [__Download page__](https://github.com/shad0w-walker233/ThunderCat/releases/tag/v1.1)
 
 Screenshot
 ---

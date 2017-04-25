@@ -223,6 +223,7 @@ FakesAssemblies/
 .DS_Store
 .AppleDouble
 .LSOverride
+*.xcodeproj/
 
 # Thumbnails
 ._*
